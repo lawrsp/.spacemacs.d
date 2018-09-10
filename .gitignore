@@ -4,8 +4,11 @@
 # Packaging
 .cask
 
+.spacemacs.env
+
 # Backup files
 *~
 
 # Undo-tree save-files
 *.~undo-tree
+

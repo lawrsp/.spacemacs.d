@@ -52,6 +52,7 @@ values."
                                          ("elisp" "emacs-lisp"))
                markdown-live-preview-engine 'vmd)
      (org :variables
+          org-projectile-file "~/org/TODOs.org"
           org-enable-github-support t
           ;;org-enable-bootstrap-support t
           ;;org-enable-hugo-support t
@@ -355,6 +356,9 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
 
+  (with-eval-after-load 'web-mode
+    (add-hook 'web-mode-hook 'prettier-js-mode))
+
   (with-eval-after-load 'js2-mode
     (add-hook 'js2-mode-hook 'prettier-js-mode))
 
@@ -362,6 +366,10 @@ you should place your code here."
     (setq hippie-expand-try-functions-list
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
+
+  (with-eval-after-load 'org
+    (setq org-agenda-files '("~/org/brain/" "~/org/")))
+  
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

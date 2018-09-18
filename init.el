@@ -46,7 +46,6 @@ values."
      (markdown :variables
                markdown-mmm-auto-modes '(
                                          "go"
-
                                          ("javascript" "rjsx")
                                          ("html" "web")
                                          ("elisp" "emacs-lisp"))
@@ -68,25 +67,28 @@ values."
      syntax-checking
      git
      version-control
-     (lsp :variables
-          lsp-ui-doc-enable	nil
-          lsp-ui-flycheck-enable nil
-          lsp-ui-sideline-enable nil)
+     lsp 
      tern
      node
      (javascript :variables
+                 lsp-ui-doc-enable	nil
+                 lsp-ui-flycheck-enable nil
+                 lsp-ui-sideline-enable nil
                  node-add-modules-path t
                  javascript-backend 'lsp
                  javascript-fmt-tool 'prettier)
-     html 
+     html
      react
-     ;; (react :variables
-     ;;        node-add-modules-path t
-     ;;        javascript-fmt-tool 'prettier)
+     (vue :variables
+          vue-format-before-save t
+          lsp-ui-doc-enable	t
+          lsp-ui-flycheck-enable t
+          lsp-ui-sideline-enable t
+          lsp-ui-flycheck-enable t)
      (go :variables
          gofmt-command "goimports"
          go-format-before-save t
-         flycheck-go-build-install-deps t 
+         flycheck-go-build-install-deps t
          ;;godoc-at-point-function 'godoc-gogetdoc
          go-tab-width nil
          ;; go-install-after-save 'sync
@@ -353,11 +355,22 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+
+  ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
+
+  (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))
+  (add-to-list 'auto-mode-alist '("\\.prettierrc\\'" . json-mode))
+
+  (with-eval-after-load 'json-mode
+    (add-hook 'json-mode-hook 'prettier-js-mode))
 
   (with-eval-after-load 'web-mode
     (add-hook 'web-mode-hook 'prettier-js-mode))
+
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'javascript-eslint 'web-mode))
 
   (with-eval-after-load 'js2-mode
     (add-hook 'js2-mode-hook 'prettier-js-mode))
@@ -369,9 +382,7 @@ you should place your code here."
 
   (with-eval-after-load 'org
     (setq org-agenda-files '("~/org/brain/" "~/org/")))
-  
-  )
-
+)
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
@@ -398,7 +409,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(doom-modeline eldoc-eval shrink-path ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+   '(lsp-vue ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

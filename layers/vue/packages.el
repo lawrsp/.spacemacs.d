@@ -16,12 +16,8 @@
     flycheck
     smartparens
     vue-mode
-    (lsp-vue :requires lsp-mode lsp-ui company-lsp
-             :location (recipe
-                        :fetcher github
-                        :repo "lawrsp/lsp-vue"
-                        :branch "fix-lsp-format-buffer")))
-  )
+    (lsp-vue :requires lsp-mode lsp-ui company-lsp)
+  ))
 
 (defun vue/post-init-add-node-modules-path ()
   (spacemacs/add-to-hooks #'add-node-modules-path '(css-mode-hook
@@ -42,6 +38,11 @@
 
 (defun vue/post-init-flycheck ()
   (spacemacs/enable-flycheck 'vue-mode))
+
+;; lsp-ui-doc-enable	t
+;; lsp-ui-flycheck-enable t
+;; lsp-ui-sideline-enable t
+;; lsp-ui-flycheck-enable t
 
 (defun vue/init-lsp-vue ()
   (use-package lsp-vue

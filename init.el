@@ -1,9 +1,9 @@
-;; -*- mode: emacs-lisp -*-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
-  "Layer configuration
+  "Layer configuration:
 This function should only modify configuration layer settings."
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
@@ -21,23 +21,28 @@ This function should only modify configuration layer settings."
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
    dotspacemacs-enable-lazy-installation 'unused
+
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
+
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
+
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(sql
+   '(
+     sql
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
+     ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
+     ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      osx
+     neotree
      helm
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence "jk")
@@ -90,19 +95,26 @@ This function should only modify configuration layer settings."
          flycheck-go-build-install-deps t
          ;;godoc-at-point-function 'godoc-gogetdoc
          go-tab-width nil
-         ;; go-install-after-save 'sync
+         go-install-after-save 'sync
          )
      docker
      )
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
+   ;; To use a local version of a package, use the `:location' property:
+   ;; '(your-package :location "~/path/to/your-package/")
+   ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '()
+
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
+
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '()
+
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -220,8 +232,7 @@ It should only modify the values of Spacemacs settings."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(monokai
                          spacemacs-dark
-                         spacemacs-light)
-
+                         )
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
    ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
@@ -332,7 +343,7 @@ It should only modify the values of Spacemacs settings."
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup t
 
-   ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
+   ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
 

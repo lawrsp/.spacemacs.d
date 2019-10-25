@@ -90,13 +90,14 @@ This function should only modify configuration layer settings."
      ;;      vue-format-before-save t)
 
      (go :variables
-         gofmt-command "goimports"
-         go-format-before-save t
-         flycheck-go-build-install-deps t
-         ;;godoc-at-point-function 'godoc-gogetdoc
+         go-backend 'go-mode
          go-tab-width nil
+         go-format-before-save t
+         gofmt-command "goimports"
+         ;;flycheck-go-build-install-deps t
+         ;;godoc-at-point-function 'godoc-gogetdoc
          go-install-after-save 'sync
-         )
+         go-use-golangci-lint t)
      docker
      )
 
@@ -232,7 +233,7 @@ It should only modify the values of Spacemacs settings."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(monokai
                          spacemacs-dark
-                         )
+                         spacemacs-light)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
    ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
@@ -391,7 +392,15 @@ It should only modify the values of Spacemacs settings."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers '(:relative nil
+                               :disabled-for-modes dired-mode
+                                                   doc-view-mode
+                                                   markdown-mode
+                                                   org-mode
+                                                   pdf-view-mode
+                                                   text-mode
+                                                   neotree-mode
+                               :size-limit-kb 1000)
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)

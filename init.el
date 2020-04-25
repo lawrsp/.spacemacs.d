@@ -32,22 +32,24 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(nginx
-     sql
-     html
+   '(
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     osx
-     neotree
-     helm
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence "jk")
      better-defaults
+     osx
+     git
+     ;; version-control
+     helm 
      multiple-cursors
      emacs-lisp
+     nginx
+     sql
+     html
      yaml
      (markdown :variables
                markdown-mmm-auto-modes '(
@@ -67,16 +69,18 @@ This function should only modify configuration layer settings."
           ;;org-enable-reveal-js-support t
           org-want-todo-bindings t)
      (shell :variables
-            shell-default-height 30
+            shell-default-height 45
             shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
-     git
-     version-control
-     ;; (lsp :variables
-     ;;      lsp-ui-doc-enable	nil
-     ;;      lsp-ui-flycheck-enable nil
-     ;;      lsp-ui-sideline-enable nil)
+     (lsp :variables
+          lsp-ui-doc-enable	nil
+          ;; lsp-ui-doc-delay 0.8
+          lsp-ui-flycheck-enable nil
+          ;; lsp-ui-peek-enable t
+          ;; lsp-ui-sideline-delay 0.8
+          ;; lsp-ui-sideline-update-mode 'line
+          lsp-ui-sideline-enable nil)
      import-js
      (javascript :variables
                  node-add-modules-path t
@@ -105,10 +109,12 @@ This function should only modify configuration layer settings."
          ;;flycheck-go-build-install-deps t
          ;;godoc-at-point-function 'godoc-gogetdoc
          ;; go-install-after-save 'sync
-         go-use-golangci-lint t
+         ;; go-use-golangci-lint t
          )
      docker
      python
+     (treemacs :variables
+               treemacs-use-git-mode 'deferred)
      )
 
 
@@ -249,9 +255,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
-                         spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(zenburn
+                         solarized-dark
+                         solarized-light
+                         doom-one
+                         doom-one-light)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
    ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
@@ -267,7 +275,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 12.0
                                :weight normal
                                :width normal)
 
@@ -526,11 +534,15 @@ See the header of this file for more information."
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
-This function is called immediately after `dotspacemacs/init', before layer
-configuration.
-It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
+  This function is called immediately after `dotspacemacs/init', before layer
+  configuration.
+  It is mostly for variables that should be set before packages are loaded.
+  If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq configuration-layer-elpa-archives
+        '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+          ("org-cn"   . "http://elpa.emacs-china.org/org/")
+          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+    )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -545,12 +557,38 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+ 
+  ;; (use-package doom-themes
+  ;;   :config
+  ;;   ;; Global settings (defaults)
+  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;   ;; (load-theme 'doom-one t)
 
-  (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
+  ;;   ;; Enable flashing mode-line on errors
+  ;;   ;; (doom-themes-visual-bell-config)
+
+  ;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
+  ;;   ;; (doom-themes-neotree-config)
+  ;;   ;; or for treemacs users
+  ;;   (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  ;;   (doom-themes-treemacs-config)
+
+  ;;   ;; Corrects (and improves) org-mode's native fontification.
+  ;;   ;; (doom-themes-org-config)
+  ;;   )
+  ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  (setq doom-themes-treemacs-theme "doom-atom")
+  (doom-themes-treemacs-config)
+
+
+  ;; (setq tab-always-indent t)
+  ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-
-
+  ;; (with-eval-after-load 'treemacs
+  ;;    (treemacs-resize-icons 16))
+ 
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))
@@ -560,11 +598,11 @@ before packages are loaded."
   (with-eval-after-load 'json-mode
     (add-hook 'json-mode-hook 'prettier-js-mode))
 
-  (with-eval-after-load 'web-mode
-    (add-hook 'web-mode-hook 'prettier-js-mode))
+  ;; (with-eval-after-load 'web-mode
+  ;;   (add-hook 'web-mode-hook 'prettier-js-mode))
 
-  (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'javascript-eslint 'web-mode))
+  ;; (with-eval-after-load 'flycheck
+  ;;   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
   ;;(with-eval-after-load 'js2-mode
   ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
@@ -579,37 +617,3 @@ before packages are loaded."
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (nginx-mode ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
-

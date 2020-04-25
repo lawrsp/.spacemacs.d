@@ -542,7 +542,7 @@ See the header of this file for more information."
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
           ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
-    )
+  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -581,7 +581,6 @@ before packages are loaded."
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
 
-
   ;; (setq tab-always-indent t)
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
@@ -589,6 +588,10 @@ before packages are loaded."
   ;; (with-eval-after-load 'treemacs
   ;;    (treemacs-resize-icons 16))
  
+  ;; zenburn set:
+  (custom-set-faces
+   '(vertical-border ((t (:foreground "grey33")))))
+
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))

@@ -38,13 +38,28 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
+     (org :variables
+          org-projectile-file "~/org/TODOs.org"
+          ;; org-enable-github-support t
+          ;; org-enable-bootstrap-support t
+          ;; org-enable-hugo-support t
+          ;; org-enable-trello-support t
+          ;; org-projectile-file "TODOs.org"
+          ;; org-enable-org-journal-support t
+          ;; org-enable-reveal-js-support t
+          org-want-todo-bindings t)
+
+     themes-megapack
+     theming
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence "jk")
      better-defaults
      osx
      git
      ;; version-control
-     helm 
+     ;; helm 
+     ivy
      multiple-cursors
      emacs-lisp
      nginx
@@ -58,16 +73,6 @@ This function should only modify configuration layer settings."
                                          ("html" "web")
                                          ("elisp" "emacs-lisp"))
                markdown-live-preview-engine 'vmd)
-     (org :variables
-          org-projectile-file "~/org/TODOs.org"
-          org-enable-github-support t
-          ;;org-enable-bootstrap-support t
-          ;;org-enable-hugo-support t
-          ;;org-enable-trello-support t
-          ;;org-projectile-file "TODOs.org"
-          ;;org-enable-org-journal-support t
-          ;;org-enable-reveal-js-support t
-          org-want-todo-bindings t)
      (shell :variables
             shell-default-height 45
             shell-default-position 'bottom)
@@ -77,11 +82,12 @@ This function should only modify configuration layer settings."
           lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
           lsp-ui-flycheck-enable nil
-          ;; lsp-ui-peek-enable t
+          lsp-ui-peek-enable t
           ;; lsp-ui-sideline-delay 0.8
           ;; lsp-ui-sideline-update-mode 'line
           lsp-ui-sideline-enable nil)
      import-js
+     ;; tern
      (javascript :variables
                  node-add-modules-path t
                  js2-strict-missing-semi-warning nil
@@ -256,10 +262,10 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         solarized-dark
+                         organic-green
                          solarized-light
-                         doom-one
-                         doom-one-light)
+                         spacemacs-light
+                         solarized-dark)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
    ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
@@ -275,6 +281,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
+   ;; dotspacemacs-default-font '("Noto Sans Mono CJK SC" 
                                :size 12.0
                                :weight normal
                                :width normal)
@@ -542,6 +549,20 @@ See the header of this file for more information."
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
           ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+  (setq theming-modifications
+        '((zenburn
+           ;; zenburn set:
+           (vertical-border :foreground "grey33")
+           (company-tooltip-selection :foreground "#DCDCCC" :background "#6F6F6F"))
+          ;; (solarized-light
+          ;;  ;; C7EDCC
+          ;;  ;; solarized-light set
+          ;;  (default :background "#CCE8CF"))
+          ;; (spacemacs-light
+          ;;  ;; spacemacs-light set
+          ;;  (default :background "#CCE8CF"))
+          ))
+
   )
 
 (defun dotspacemacs/user-load ()
@@ -557,41 +578,66 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  (setq  read_process_output_max (* 1024 400))
  
-  ;; (use-package doom-themes
-  ;;   :config
-  ;;   ;; Global settings (defaults)
-  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;;   ;; (load-theme 'doom-one t)
+  (use-package doom-themes
+    :config
+    ;; Global settings (defaults)
+    ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+    ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    ;; (load-theme 'doom-one t)
+    ;; Enable flashing mode-line on errors
+    ;; (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    ;; (doom-themes-neotree-config)
 
-  ;;   ;; Enable flashing mode-line on errors
-  ;;   ;; (doom-themes-visual-bell-config)
+    ;; 不受variable-pitch的影响
+    (setq doom-themes-treemacs-enable-variable-pitch nil)
+    ;; or for treemacs users
+    ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+    (setq doom-themes-treemacs-theme "doom-atom")
+    (doom-themes-treemacs-config)
 
-  ;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
-  ;;   ;; (doom-themes-neotree-config)
-  ;;   ;; or for treemacs users
-  ;;   (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  ;;   (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    ;; (doom-themes-org-config)
+    )
 
-  ;;   ;; Corrects (and improves) org-mode's native fontification.
-  ;;   ;; (doom-themes-org-config)
-  ;;   )
-  ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  (setq doom-themes-treemacs-theme "doom-atom")
-  (doom-themes-treemacs-config)
+  ;; 在图形界面下设置cjk的字体是
+  (when (display-graphic-p)
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset
+                        (font-spec :family "Noto Sans CJK SC" :size 12))))
+
+  ;; FONTS
+  ;; -----
+  (custom-set-faces
+   '(variable-pitch ((t (:family "Source Code Pro"))))
+   '(fixed-pitch ((t (:family "Noto Sans Mono CJK SC"))))
+   )
+
+  (defun set-buffer-variable-pitch ()
+    (interactive)
+    (variable-pitch-mode t)
+    ;; (setq line-spacing 0)
+    (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
+    )
+
+  (add-hook 'org-mode-hook 'set-buffer-variable-pitch)
+  (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch)
+  (add-hook 'Info-mode-hook 'set-buffer-variable-pitch)
 
   ;; (setq tab-always-indent t)
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-  ;; (with-eval-after-load 'treemacs
-  ;;    (treemacs-resize-icons 16))
  
-  ;; zenburn set:
-  (custom-set-faces
-   '(vertical-border ((t (:foreground "grey33")))))
-
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))
@@ -620,3 +666,4 @@ before packages are loaded."
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+

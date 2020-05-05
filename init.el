@@ -40,12 +40,26 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (org :variables
-          org-projectile-file "~/org/TODOs.org"
+          org-enable-verb-support t
+          org-projectile-file "~/org/gtd/gtd.org"
+          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-agenda-files '("~/org/gtd/inbox.org"
+                                   "~/org/gtd/gtd.org"
+                                   "~/org/gtd/tickler.org")
+          org-capture-templates '(("t" "Todo [inbox]" entry
+                                         (file+headline "~/org/gtd/inbox.org" "Tasks")
+                                         "* TODO %i%?")
+                                        ("T" "Tickler" entry
+                                         (file+headline "~/org/gtd/tickler.org" "Tickler")
+                                         "* %i%? \n %U"))
+          org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
+                                     ("~/org/gtd/someday.org" :level . 1)
+                                     ("~/org/gtd/tickler.org" :maxlevel . 2))
+
           ;; org-enable-github-support t
           ;; org-enable-bootstrap-support t
           ;; org-enable-hugo-support t
           ;; org-enable-trello-support t
-          ;; org-projectile-file "TODOs.org"
           ;; org-enable-org-journal-support t
           ;; org-enable-reveal-js-support t
           org-want-todo-bindings t)
@@ -262,7 +276,6 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         organic-green
                          solarized-light
                          spacemacs-light
                          solarized-dark)
@@ -661,9 +674,21 @@ before packages are loaded."
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
 
-  (with-eval-after-load 'org
-    (setq org-agenda-files '("~/org/brain/" "~/org/")))
+  ;; (with-eval-after-load 'org
+  ;;   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))) 
+  ;;   (setq org-agenda-files '("~/org/gtd/inbox.org"
+  ;;                            "~/org/gtd/gtd.org"
+  ;;                            "~/org/gtd/tickler.org"))
+  ;;   (setq org-capture-templates '(("t" "Todo [inbox]" entry
+  ;;                                  (file+headline "~/org/gtd/inbox.org" "Tasks")
+  ;;                                  "* TODO %i%?")
+  ;;                                 ("T" "Tickler" entry
+  ;;                                  (file+headline "~/org/gtd/tickler.org" "Tickler")
+  ;;                                  "* %i%? \n %U")))
+  ;;   (setq org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
+  ;;                              ("~/org/gtd/someday.org" :level . 1)
+  ;;                              ("~/org/gtd/tickler.org" :maxlevel . 2)))
+  ;;   )
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-

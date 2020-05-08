@@ -38,23 +38,24 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (org :variables
           org-enable-verb-support t
           org-projectile-file "~/org/gtd/gtd.org"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
-          org-agenda-files '("~/org/gtd/inbox.org"
-                                   "~/org/gtd/gtd.org"
-                                   "~/org/gtd/tickler.org")
+          org-agenda-files '("~/org/gtd/gtd.org"
+                             "~/org/gtd/inbox.org"
+                             "~/org/gtd/tickler.org")
           org-capture-templates '(("t" "Todo [inbox]" entry
-                                         (file+headline "~/org/gtd/inbox.org" "Tasks")
-                                         "* TODO %i%?")
-                                        ("T" "Tickler" entry
-                                         (file+headline "~/org/gtd/tickler.org" "Tickler")
-                                         "* %i%? \n %U"))
+                                   (file+headline "~/org/gtd/inbox.org" "Tasks")
+                                   "* TODO %i%?")
+                                  ("T" "Tickler" entry
+                                   (file+headline "~/org/gtd/tickler.org" "Tickler")
+                                   "* %i%? \n %U"))
           org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
-                                     ("~/org/gtd/someday.org" :level . 1)
-                                     ("~/org/gtd/tickler.org" :maxlevel . 2))
+                               ("~/org/gtd/someday.org" :level . 1)
+                               ("~/org/gtd/tickler.org" :maxlevel . 2))
 
           ;; org-enable-github-support t
           ;; org-enable-bootstrap-support t
@@ -105,14 +106,14 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  node-add-modules-path t
                  js2-strict-missing-semi-warning nil
-                 javascript-backend 'lsp
+                 javascript-backend 'tide
                  javascript-lsp-linter nil
                  javascript-import-tool 'import-js
                  javascript-fmt-on-save t
                  javascript-fmt-tool 'prettier)
      (typescript :variables
                  typescript-fmt-tool 'prettier
-                 typescript-backend 'lsp
+                 typescript-backend 'tide
                  typescript-lsp-linter nil)
      html
      react
@@ -593,7 +594,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   (setq  read_process_output_max (* 1024 400))
- 
+
   (use-package doom-themes
     :config
     ;; Global settings (defaults)
@@ -673,22 +674,6 @@ before packages are loaded."
     (setq hippie-expand-try-functions-list
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
-
-  ;; (with-eval-after-load 'org
-  ;;   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))) 
-  ;;   (setq org-agenda-files '("~/org/gtd/inbox.org"
-  ;;                            "~/org/gtd/gtd.org"
-  ;;                            "~/org/gtd/tickler.org"))
-  ;;   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-  ;;                                  (file+headline "~/org/gtd/inbox.org" "Tasks")
-  ;;                                  "* TODO %i%?")
-  ;;                                 ("T" "Tickler" entry
-  ;;                                  (file+headline "~/org/gtd/tickler.org" "Tickler")
-  ;;                                  "* %i%? \n %U")))
-  ;;   (setq org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
-  ;;                              ("~/org/gtd/someday.org" :level . 1)
-  ;;                              ("~/org/gtd/tickler.org" :maxlevel . 2)))
-  ;;   )
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

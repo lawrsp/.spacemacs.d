@@ -300,7 +300,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
    ;; dotspacemacs-default-font '("Noto Sans Mono CJK SC" 
-                               :size 12.0
+                               :size 14.0
                                :weight normal
                                :width normal)
 
@@ -626,7 +626,7 @@ before packages are loaded."
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
-                        (font-spec :family "Noto Sans CJK SC" :size 12))))
+                        (font-spec :family "Noto Sans CJK SC"))))
 
   ;; FONTS
   ;; -----
@@ -655,7 +655,7 @@ before packages are loaded."
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
- 
+
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))

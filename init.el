@@ -52,7 +52,10 @@ This function should only modify configuration layer settings."
                                    "* TODO %i%?")
                                   ("T" "Tickler" entry
                                    (file+headline "~/org/gtd/tickler.org" "Tickler")
-                                   "* %i%? \n %U"))
+                                   "* %i%? \n %U")
+                                  ("l" "Link" entry
+                                   (file+headline "~/org/gtd/inbox.org" "Link")
+                                   "* %:annotation\n%i\n" :immediate-finish t :kill-buffer t))
           org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
                                ("~/org/gtd/someday.org" :level . 1)
                                ("~/org/gtd/tickler.org" :maxlevel . 2))
@@ -64,6 +67,7 @@ This function should only modify configuration layer settings."
           ;; org-enable-org-journal-support t
           ;; org-enable-reveal-js-support t
           org-want-todo-bindings t)
+     (org-roam)
 
      themes-megapack
      theming

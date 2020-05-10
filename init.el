@@ -674,10 +674,39 @@ before packages are loaded."
   ;;(with-eval-after-load 'js2-mode
   ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
 
+
+  (defun mytreemacs--create-file-react-hook (path)
+    (find-file path)
+    (insert "import React from 'react';\n")
+    (rjsx-mode))
+
+  (defun mytreemacs--create-file-go-hook (path)
+    (find-file path)
+    (let* ((name (file-name-directory path))
+           (pkgname (car (last (split-string name "/" t))))
+           (head (format "package %s\n" pkgname)))
+      (insert head)))
+
+  (defun mytreemacs-create-file-react ()
+    (interactive)
+    (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
+      (treemacs-create-file)))
+
+  (defun mytreemacs-create-file-go ()
+    (interactive)
+    (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
+      (treemacs-create-file)))
+
+
+  (with-eval-after-load 'treemacs-mode
+    (define-key treemacs-mode-map (kbd "ctr") #'mytreemacs-create-file-react)
+    (define-key treemacs-mode-map (kbd "ctg") #'mytreemacs-create-file-go))
+
+
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
-)
+  )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
                                ("~/org/gtd/someday.org" :level . 1)
                                ("~/org/gtd/tickler.org" :maxlevel . 2))
 
+          org-brain-path "~/org/notes"
           ;; org-enable-github-support t
           ;; org-enable-bootstrap-support t
           ;; org-enable-hugo-support t
@@ -700,7 +701,10 @@ before packages are loaded."
 
   (with-eval-after-load 'treemacs-mode
     (define-key treemacs-mode-map (kbd "ctr") #'mytreemacs-create-file-react)
-    (define-key treemacs-mode-map (kbd "ctg") #'mytreemacs-create-file-go))
+    (define-key treemacs-mode-map (kbd "ctg") #'mytreemacs-create-file-go)
+    (which-key-add-major-mode-key-based-replacements 'treemacs-mode
+      "ct"         "mytreemacs-create-template"))
+
 
 
   (with-eval-after-load 'yasnippet

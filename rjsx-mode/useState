@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: useState
+# key: us
+# group: react-hooks
+# --
+
+
+const [$1, set${1:$(upcase-initials yas-text)}] = React.useState($0);

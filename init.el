@@ -73,6 +73,9 @@ This function should only modify configuration layer settings."
      themes-megapack
      theming
      (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/"
                       auto-completion-complete-with-key-sequence "jk")
      better-defaults
      osx
@@ -486,7 +489,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -648,9 +651,12 @@ before packages are loaded."
     (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
     )
 
-  (add-hook 'org-mode-hook 'set-buffer-variable-pitch)
-  (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch)
-  (add-hook 'Info-mode-hook 'set-buffer-variable-pitch)
+  (with-eval-after-load 'org-mode
+    (add-hook 'org-mode-hook 'set-buffer-variable-pitch))
+  (with-eval-after-load 'markdown-mode 
+    (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
+  (with-eval-after-load 'info-mode
+    (add-hook 'Info-mode-hook 'set-buffer-variable-pitch))
 
   ;; (setq tab-always-indent t)
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))

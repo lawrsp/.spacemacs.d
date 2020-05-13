@@ -55,14 +55,28 @@ This function should only modify configuration layer settings."
                                    "* %i%? \n %U")
                                   ("l" "Link" entry
                                    (file+headline "~/org/gtd/inbox.org" "Link")
-                                   "* %:annotation\n%i\n" :immediate-finish t :kill-buffer t))
+                                   "* %:annotation\n%i\n" :immediate-finish t :kill-buffer t)
+                                  ("j" "Journal entry" entry (function org-journal-find-location)
+                                   "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+                                  )
           org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
                                ("~/org/gtd/someday.org" :level . 1)
                                ("~/org/gtd/tickler.org" :maxlevel . 2))
 
+          ;; for org-brain
           org-brain-path "~/org/notes"
-          ;; org-enable-github-support t
-          ;; org-enable-bootstrap-support t
+          ;; for org-journal
+          org-enable-org-journal-support t
+          org-journal-dir "~/org/journal/"
+          org-journal-file-type 'mothly
+          org-journal-date-format "%A, %Y-%m-%d"
+          org-journal-enable-agenda-integration t
+          org-journal-skip-carryover-drawers (list "LOGBOOK")
+          org-icalendar-store-UID t
+          org-icalendar-include-todo "all"
+          org-icalendar-combined-agenda-file "~/org/journal/export-journal.ics"
+          org-extend-today-until 4
+          ;; org-enable-github-support t ;; org-enable-bootstrap-support t
           ;; org-enable-hugo-support t
           ;; org-enable-trello-support t
           ;; org-enable-org-journal-support t
@@ -681,37 +695,31 @@ before packages are loaded."
   ;;(with-eval-after-load 'js2-mode
   ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
 
-
-  (defun mytreemacs--create-file-react-hook (path)
-    (find-file path)
-    (insert "import React from 'react';\n")
-    (rjsx-mode))
-
-  (defun mytreemacs--create-file-go-hook (path)
-    (find-file path)
-    (let* ((name (file-name-directory path))
-           (pkgname (car (last (split-string name "/" t))))
-           (head (format "package %s\n" pkgname)))
-      (insert head)))
-
-  (defun mytreemacs-create-file-react ()
-    (interactive)
-    (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
-      (treemacs-create-file)))
-
-  (defun mytreemacs-create-file-go ()
-    (interactive)
-    (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
-      (treemacs-create-file)))
-
-
   (with-eval-after-load 'treemacs-mode
-    (define-key treemacs-mode-map (kbd "ctr") #'mytreemacs-create-file-react)
-    (define-key treemacs-mode-map (kbd "ctg") #'mytreemacs-create-file-go)
-    (which-key-add-major-mode-key-based-replacements 'treemacs-mode
-      "ct"         "mytreemacs-create-template"))
+    (defun mytreemacs--create-file-react-hook (path)
+      (find-file path)
+      (insert "import React from 'react';\n")
+      (rjsx-mode))
 
+    (defun mytreemacs--create-file-go-hook (path)
+      (find-file path)
+      (let* ((name (file-name-directory path))
+             (pkgname (car (last (split-string name "/" t))))
+             (head (format "package %s\n" pkgname)))
+        (insert head)))
 
+    (defun mytreemacs-create-file-react ()
+      (interactive)
+      (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
+        (treemacs-create-file)))
+
+    (defun mytreemacs-create-file-go ()
+      (interactive)
+      (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
+        (treemacs-create-file)))
+
+    (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
+    (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go)) 
 
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list
@@ -733,6 +741,16 @@ before packages are loaded."
   ;; (defun timed-notification(time msg)
   ;;   (interactive "sNotification when (e.g: 2 minutes, 60 seconds, 3 days): \nsMessage: ")
   ;;   (run-at-time time nil (lambda (msg) (terminal-notifier-notify "Emacs" msg)) msg)) 
+
+  ;; journal
+  (with-eval-after-load 'org-journal
+    (defun org-journal-find-location ()
+      ;; Open today's journal, but specify a non-nil prefix argument in order to
+      ;; inhibit inserting the heading; org-capture will insert the heading.
+      (org-journal-new-entry t)
+      ;; Position point on the journal's top-level heading so that org-capture
+      ;; will add the new entry as a child entry.
+      (goto-char (point-min))))
 
   ;; timer 
   (with-eval-after-load 'org-pomodoro

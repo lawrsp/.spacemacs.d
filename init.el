@@ -652,19 +652,17 @@ before packages are loaded."
 
   ;; use variable-pitch-mode in org-mode
   (with-eval-after-load 'org
-    (defun myorg-set-buffer-variable-pitch ()
-      (interactive)
-      (variable-pitch-mode t)
-      ;; (setq line-spacing 0)
-      (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-      ;; (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
-      ;; (set-face-attribute 'org-code nil :inherit 'fixed-pitch) 
-      ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
-      ;; (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
-      ;; (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-done nil :inherit 'fixed-pitch))
-    (add-hook 'org-mode-hook 'myorg-set-buffer-variable-pitch)) 
+    ;; (setq line-spacing 0)
+    (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
+    (add-hook 'org-mode-hook 'variable-pitch-mode)) 
 
   ;; (with-eval-after-load 'markdown-mode 
   ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )

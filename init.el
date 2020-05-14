@@ -68,7 +68,7 @@ This function should only modify configuration layer settings."
           ;; for org-journal
           org-enable-org-journal-support t
           org-journal-dir "~/org/journal/"
-          org-journal-file-type 'mothly
+          org-journal-file-type 'monthly
           org-journal-date-format "%A, %Y-%m-%d"
           org-journal-enable-agenda-integration t
           org-journal-skip-carryover-drawers (list "LOGBOOK")
@@ -598,7 +598,6 @@ See the header of this file for more information."
           ;;  ;; spacemacs-light set
           ;;  (default :background "#CCE8CF"))
           ))
-
   )
 
 (defun dotspacemacs/user-load ()
@@ -639,38 +638,38 @@ before packages are loaded."
     ;; (doom-themes-org-config)
     )
 
-  ;; 在图形界面下设置cjk的字体是
+  ;; set cjk font face under graphic UI 
   (when (display-graphic-p)
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         (font-spec :family "Noto Sans CJK SC"))))
 
-  ;; FONTS
-  ;; -----
+  ;; setup variable-pitch face
   (custom-set-faces
-   '(variable-pitch ((t (:family "Source Code Pro"))))
-   '(fixed-pitch ((t (:family "Noto Sans Mono CJK SC"))))
-   )
+   '(variable-pitch ((t . (:family "Source Code Pro"))))
+   '(fixed-pitch ((t . (:family "Noto Sans Mono CJK SC")))))
 
-  (defun set-buffer-variable-pitch ()
-    (interactive)
-    (variable-pitch-mode t)
-    ;; (setq line-spacing 0)
-    (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
-    )
+  ;; use variable-pitch-mode in org-mode
+  (with-eval-after-load 'org
+    (defun myorg-set-buffer-variable-pitch ()
+      (interactive)
+      (variable-pitch-mode t)
+      ;; (setq line-spacing 0)
+      (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+      ;; (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
+      ;; (set-face-attribute 'org-code nil :inherit 'fixed-pitch) 
+      ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+      ;; (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
+      ;; (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-done nil :inherit 'fixed-pitch))
+    (add-hook 'org-mode-hook 'myorg-set-buffer-variable-pitch)) 
 
-  (with-eval-after-load 'org-mode
-    (add-hook 'org-mode-hook 'set-buffer-variable-pitch))
-  (with-eval-after-load 'markdown-mode 
-    (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
-  (with-eval-after-load 'info-mode
-    (add-hook 'Info-mode-hook 'set-buffer-variable-pitch))
+  ;; (with-eval-after-load 'markdown-mode 
+  ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
+  ;; (with-eval-after-load 'info-mode
+  ;;   (add-hook 'Info-mode-hook 'set-buffer-variable-pitch))
 
   ;; (setq tab-always-indent t)
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))

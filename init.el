@@ -44,6 +44,7 @@ This function should only modify configuration layer settings."
           org-enable-verb-support t
           org-projectile-file "~/org/gtd/gtd.org"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
+          ;; org-agenda-window-setup 'other-window
           org-agenda-files '("~/org/gtd/gtd.org"
                              "~/org/gtd/inbox.org"
                              "~/org/gtd/tickler.org")
@@ -84,7 +85,7 @@ This function should only modify configuration layer settings."
           org-want-todo-bindings t)
      (org-roam)
 
-     themes-megapack
+     ;; themes-megapack
      theming
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
@@ -111,7 +112,7 @@ This function should only modify configuration layer settings."
                                          ("elisp" "emacs-lisp"))
                markdown-live-preview-engine 'vmd)
      (shell :variables
-            shell-default-height 45
+            shell-default-height 25
             shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
@@ -301,6 +302,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-themes '(zenburn
                          solarized-light
                          spacemacs-light
+                         doom-one
                          solarized-dark)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -563,6 +565,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-zone-out-when-idle nil
 
    ;; Run `spacemacs/prettify-org-buffer' when
+
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
    dotspacemacs-pretty-docs nil))
@@ -637,6 +640,72 @@ before packages are loaded."
     ;; Corrects (and improves) org-mode's native fontification.
     ;; (doom-themes-org-config)
     )
+
+  ;; window
+  (defvar mywin-right-fixed-windows nil )
+  (defconst mywin-right-fixed-buffer-prefix  "*Right")
+ 
+
+  (defun mywin-close-right-fix ()
+    "close all the right fix window"
+    (interactive)
+    (let ((ignore-window-parameters t))
+      (when (listp mywin-right-fixed-windows)
+        (dolist (w mywin-right-fixed-windows)
+          (delete-window w))))
+    (setq mywin-right-fixed-windows '()))
+
+  (defun mywin--get-last-right-fix-window ()
+    "get the last right fix window"
+    (if (listp mywin-right-fixed-windows)
+      (if-let (w (last mywin-right-fixed-windows))
+          w)
+      'main)) 
+
+  (defun mywin--get-next-right-fix-direction ()
+    "get the last right fix window"
+    (if (listp mywin-right-fixed-windows)
+        (if-let (last (car mywin-right-fixed-windows))
+            'below)
+      'right))
+
+  (defun mywin-display-right-fix ()
+    "display current buffer to fix window of right"
+    (interactive)
+    (-when-let (w (display-buffer (current-buffer) 
+                                  ;; '(display-buffer-in-side-window . ((side . right)
+                                  `(display-buffer-in-direction . ((direction . ,(mywin--get-next-right-fix-direction))
+                                                                   (window . ,(mywin--get-last-right-fix-window))
+                                                                   (slot . 0)
+                                                                   (dedicated . t)
+                                                                   (window-width . 40)
+                                                                   (window-height . 0.15)
+                                                                   (window-parameters . ((no-delete-other-windows . t)
+                                                                                         (delete-window . (lambda (w)
+                                                                                                            "remove from right fixed window"
+                                                                                                            (let ((ignore-window-parameters t))
+                                                                                                              (setq mywin-right-fixed-windows
+                                                                                                                    (remove w mywin-right-fixed-windows))
+                                                                                                              (kill-buffer (window-buffer w)))
+                                                                                                            ))
+                                                                                         ))
+                                                                   ))))
+      (let* ((buffer (window-buffer w))
+             (buffername (buffer-name buffer)))
+        (when (not (string-prefix-p mywin-right-fixed-buffer-prefix buffername))
+          (let ((name (format "%s-%s" mywin-right-fixed-buffer-prefix buffer-name)))
+            (rename-buffer name)))
+        (add-to-list 'mywin-right-fixed-windows w))
+      ))
+
+
+  (with-eval-after-load 'ace-window
+    (add-to-list 'aw-ignored-buffers (regexp-quote (format "^%s" mywin-right-fixed-buffer-prefix))))
+  (add-to-list 'spacemacs-window-split-ignore-prefixes mywin-right-fixed-buffer-prefix)
+
+  (spacemacs/set-leader-keys "w C-l" 'mywin-display-right-fix)
+  (spacemacs/set-leader-keys "w M-l" 'mywin-close-right-fix) 
+  ;; (spacemacs/set-leader-keys "wC-l" 'mywin-display-right-fix)
 
   ;; set cjk font face under graphic UI 
   (when (display-graphic-p)
@@ -749,7 +818,7 @@ before packages are loaded."
       ;; will add the new entry as a child entry.
       (goto-char (point-min))))
 
-  ;; timer 
+  ;; timer
   (with-eval-after-load 'org-pomodoro
     (defun mytimer-notifier-notify (msg)
       (org-pomodoro-maybe-play-sound :pomodoro))

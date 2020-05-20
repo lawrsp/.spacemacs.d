@@ -38,6 +38,7 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     (window-stash)
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (org :variables
@@ -641,71 +642,32 @@ before packages are loaded."
     ;; (doom-themes-org-config)
     )
 
-  ;; window
-  (defvar mywin-right-fixed-windows nil )
-  (defconst mywin-right-fixed-buffer-prefix  "*Right")
- 
+  (with-eval-after-load 'treemacs-mode
+    (defun mytreemacs--create-file-react-hook (path)
+      (find-file path)
+      (insert "import React from 'react';\n")
+      (rjsx-mode))
 
-  (defun mywin-close-right-fix ()
-    "close all the right fix window"
-    (interactive)
-    (let ((ignore-window-parameters t))
-      (when (listp mywin-right-fixed-windows)
-        (dolist (w mywin-right-fixed-windows)
-          (delete-window w))))
-    (setq mywin-right-fixed-windows '()))
+    (defun mytreemacs--create-file-go-hook (path)
+      (find-file path)
+      (let* ((name (file-name-directory path))
+             (pkgname (car (last (split-string name "/" t))))
+             (head (format "package %s\n" pkgname)))
+        (insert head)))
 
-  (defun mywin--get-last-right-fix-window ()
-    "get the last right fix window"
-    (if (listp mywin-right-fixed-windows)
-      (if-let (w (last mywin-right-fixed-windows))
-          w)
-      'main)) 
+    (defun mytreemacs-create-file-react ()
+      (interactive)
+      (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
+        (treemacs-create-file)))
 
-  (defun mywin--get-next-right-fix-direction ()
-    "get the last right fix window"
-    (if (listp mywin-right-fixed-windows)
-        (if-let (last (car mywin-right-fixed-windows))
-            'below)
-      'right))
+    (defun mytreemacs-create-file-go ()
+      (interactive)
+      (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
+        (treemacs-create-file)))
 
-  (defun mywin-display-right-fix ()
-    "display current buffer to fix window of right"
-    (interactive)
-    (-when-let (w (display-buffer (current-buffer) 
-                                  ;; '(display-buffer-in-side-window . ((side . right)
-                                  `(display-buffer-in-direction . ((direction . ,(mywin--get-next-right-fix-direction))
-                                                                   (window . ,(mywin--get-last-right-fix-window))
-                                                                   (slot . 0)
-                                                                   (dedicated . t)
-                                                                   (window-width . 40)
-                                                                   (window-height . 0.15)
-                                                                   (window-parameters . ((no-delete-other-windows . t)
-                                                                                         (delete-window . (lambda (w)
-                                                                                                            "remove from right fixed window"
-                                                                                                            (let ((ignore-window-parameters t))
-                                                                                                              (setq mywin-right-fixed-windows
-                                                                                                                    (remove w mywin-right-fixed-windows))
-                                                                                                              (kill-buffer (window-buffer w)))
-                                                                                                            ))
-                                                                                         ))
-                                                                   ))))
-      (let* ((buffer (window-buffer w))
-             (buffername (buffer-name buffer)))
-        (when (not (string-prefix-p mywin-right-fixed-buffer-prefix buffername))
-          (let ((name (format "%s-%s" mywin-right-fixed-buffer-prefix buffer-name)))
-            (rename-buffer name)))
-        (add-to-list 'mywin-right-fixed-windows w))
-      ))
+    (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
+    (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go))
 
-
-  (with-eval-after-load 'ace-window
-    (add-to-list 'aw-ignored-buffers (regexp-quote (format "^%s" mywin-right-fixed-buffer-prefix))))
-  (add-to-list 'spacemacs-window-split-ignore-prefixes mywin-right-fixed-buffer-prefix)
-
-  (spacemacs/set-leader-keys "w C-l" 'mywin-display-right-fix)
-  (spacemacs/set-leader-keys "w M-l" 'mywin-close-right-fix) 
-  ;; (spacemacs/set-leader-keys "wC-l" 'mywin-display-right-fix)
 
   ;; set cjk font face under graphic UI 
   (when (display-graphic-p)
@@ -761,31 +723,6 @@ before packages are loaded."
   ;;(with-eval-after-load 'js2-mode
   ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
 
-  (with-eval-after-load 'treemacs-mode
-    (defun mytreemacs--create-file-react-hook (path)
-      (find-file path)
-      (insert "import React from 'react';\n")
-      (rjsx-mode))
-
-    (defun mytreemacs--create-file-go-hook (path)
-      (find-file path)
-      (let* ((name (file-name-directory path))
-             (pkgname (car (last (split-string name "/" t))))
-             (head (format "package %s\n" pkgname)))
-        (insert head)))
-
-    (defun mytreemacs-create-file-react ()
-      (interactive)
-      (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
-        (treemacs-create-file)))
-
-    (defun mytreemacs-create-file-go ()
-      (interactive)
-      (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
-        (treemacs-create-file)))
-
-    (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
-    (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go)) 
 
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list

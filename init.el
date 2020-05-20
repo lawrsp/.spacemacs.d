@@ -98,7 +98,8 @@ This function should only modify configuration layer settings."
      git
      ;; version-control
      ;; helm 
-     ivy
+     (ivy :variables
+          ivy-initial-inputs-alist nil)
      multiple-cursors
      emacs-lisp
      nginx

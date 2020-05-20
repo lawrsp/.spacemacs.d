@@ -9,7 +9,7 @@
     :init
     (progn
       (spacemacs/set-leader-keys "w C-l" 'window-stash-stash)
-      (spacemacs/set-leader-keys "w C-p" 'window-stash-stash-pop)
+      (spacemacs/set-leader-keys "w C-p" 'window-stash-pop)
       )))
 
 (defun window-stash/post-init-ace-window ()

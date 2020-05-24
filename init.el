@@ -90,7 +90,7 @@ This function should only modify configuration layer settings."
      theming
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t
+                      ;; auto-completion-enable-snippets-in-popup t
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/"
                       auto-completion-complete-with-key-sequence "jk")
      better-defaults
@@ -98,8 +98,9 @@ This function should only modify configuration layer settings."
      git
      ;; version-control
      ;; helm 
-     (ivy :variables
-          ivy-initial-inputs-alist nil)
+     ivy
+     ;; (ivy :variables
+     ;;      ivy-initial-inputs-alist nil)
      multiple-cursors
      emacs-lisp
      nginx
@@ -724,6 +725,10 @@ before packages are loaded."
   ;;(with-eval-after-load 'js2-mode
   ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
 
+  ;; (with-eval-after-load 'company
+  ;;   (define-key company-active-map (kbd "C-n") #'company-select-next) 
+  ;;   (define-key company-active-map (kbd "C-p") #'company-select-previous)
+  ;;   )
 
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list

@@ -43,6 +43,7 @@ This function should only modify configuration layer settings."
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (org :variables
           org-enable-verb-support t
+          org-edit-src-content-indentation 0
           org-projectile-file "~/org/gtd/gtd.org"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
           ;; org-agenda-window-setup 'other-window
@@ -131,9 +132,10 @@ This function should only modify configuration layer settings."
      ;; tern
      (javascript :variables
                  node-add-modules-path t
-                 js2-strict-missing-semi-warning nil
+                 ;; js2-strict-missing-semi-warning nil
                  javascript-backend 'tide
-                 javascript-lsp-linter nil
+                 tide-completion-ignore-case t
+                 ;; javascript-lsp-linter nil
                  javascript-import-tool 'import-js
                  javascript-fmt-on-save t
                  javascript-fmt-tool 'prettier)
@@ -141,7 +143,6 @@ This function should only modify configuration layer settings."
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
                  typescript-lsp-linter nil)
-     html
      react
      (vue :variables vue-backend 'dumb)
      ;; (vue :variables
@@ -212,9 +213,9 @@ It should only modify the values of Spacemacs settings."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default spacemacs-27.1.pdmp)
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -233,6 +234,13 @@ It should only modify the values of Spacemacs settings."
    ;; performance issues due to garbage collection operations.
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
+
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
@@ -620,8 +628,6 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (setq  read_process_output_max (* 1024 400))
-
   (use-package doom-themes
     :config
     ;; Global settings (defaults)
@@ -701,6 +707,9 @@ before packages are loaded."
   ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
   ;; (with-eval-after-load 'info-mode
   ;;   (add-hook 'Info-mode-hook 'set-buffer-variable-pitch))
+
+  (setq css-indent-offset 2) 
+  (setq js-indent-level 2) 
 
   ;; (setq tab-always-indent t)
   ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))

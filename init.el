@@ -701,7 +701,9 @@ before packages are loaded."
     ;; (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
     (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
     (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
-    (add-hook 'org-mode-hook 'variable-pitch-mode)) 
+    (add-hook 'org-mode-hook 'variable-pitch-mode)
+    (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx)) 
+    )
 
   ;; (with-eval-after-load 'markdown-mode 
   ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )

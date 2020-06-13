@@ -128,15 +128,14 @@ This function should only modify configuration layer settings."
           ;; lsp-ui-sideline-delay 0.8
           ;; lsp-ui-sideline-update-mode 'line
           lsp-ui-sideline-enable nil)
-     import-js
-     ;; tern
+     ;;import-js
      (javascript :variables
                  node-add-modules-path t
                  ;; js2-strict-missing-semi-warning nil
                  javascript-backend 'tide
                  tide-completion-ignore-case t
                  ;; javascript-lsp-linter nil
-                 javascript-import-tool 'import-js
+                 ;; javascript-import-tool 'import-js
                  javascript-fmt-on-save t
                  javascript-fmt-tool 'prettier)
      (typescript :variables
@@ -240,7 +239,7 @@ It should only modify the values of Spacemacs settings."
    ;; Setting this >= 1 MB should increase performance for lsp servers
    ;; in emacs 27.
    ;; (default (* 1024 1024))
-   dotspacemacs-read-process-output-max (* 1024 1024)
+   dotspacemacs-read-process-output-max (* 1024 1024 2)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
@@ -576,7 +575,6 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-zone-out-when-idle nil
 
    ;; Run `spacemacs/prettify-org-buffer' when
-
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
    dotspacemacs-pretty-docs nil))
@@ -726,6 +724,9 @@ before packages are loaded."
 
   (with-eval-after-load 'json-mode
     (add-hook 'json-mode-hook 'prettier-js-mode))
+
+  (with-eval-after-load 'css-mode
+    (add-hook 'css-mode-hook 'prettier-js-mode))
 
   ;; (with-eval-after-load 'web-mode
   ;;   (add-hook 'web-mode-hook 'prettier-js-mode))

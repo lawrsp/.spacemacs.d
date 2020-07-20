@@ -84,6 +84,8 @@ This function should only modify configuration layer settings."
           ;; org-enable-trello-support t
           ;; org-enable-org-journal-support t
           ;; org-enable-reveal-js-support t
+          ;; promodoro
+          org-pomodoro-length 40
           org-want-todo-bindings t)
      (org-roam)
 
@@ -106,7 +108,9 @@ This function should only modify configuration layer settings."
      emacs-lisp
      nginx
      sql
-     html
+     prettier
+     (html :variables
+           web-fmt-tool 'prettier)
      yaml
      (markdown :variables
                markdown-mmm-auto-modes '(
@@ -128,6 +132,10 @@ This function should only modify configuration layer settings."
           ;; lsp-ui-sideline-delay 0.8
           ;; lsp-ui-sideline-update-mode 'line
           lsp-ui-sideline-enable nil)
+     (json :variables
+           json-fmt-tool 'prettier
+           json-backend 'lsp
+           json-fmt-on-save t)
      ;;import-js
      (javascript :variables
                  node-add-modules-path t
@@ -163,7 +171,6 @@ This function should only modify configuration layer settings."
      (treemacs :variables
                treemacs-use-git-mode 'deferred)
      )
-
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -637,7 +644,7 @@ before packages are loaded."
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     ;; (doom-themes-neotree-config)
 
-    ;; 不受variable-pitch的影响
+    ;; not affected by variable-pitch
     (setq doom-themes-treemacs-enable-variable-pitch nil)
     ;; or for treemacs users
     ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
@@ -711,31 +718,11 @@ before packages are loaded."
   (setq css-indent-offset 2) 
   (setq js-indent-level 2) 
 
-  ;; (setq tab-always-indent t)
-  ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . web-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.wpy\\'" . vue-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))
   (add-to-list 'auto-mode-alist '("\\.prettierrc\\'" . json-mode))
   (add-to-list 'auto-mode-alist '("\\.stylelintrc\\'" . json-mode))
-
-  (with-eval-after-load 'json-mode
-    (add-hook 'json-mode-hook 'prettier-js-mode))
-
-  (with-eval-after-load 'css-mode
-    (add-hook 'css-mode-hook 'prettier-js-mode))
-
-  ;; (with-eval-after-load 'web-mode
-  ;;   (add-hook 'web-mode-hook 'prettier-js-mode))
-
-  ;; (with-eval-after-load 'flycheck
-  ;;   (flycheck-add-mode 'javascript-eslint 'web-mode))
-
-  ;;(with-eval-after-load 'js2-mode
-  ;;  (add-hook 'js2-mode-hook 'prettier-js-mode))
 
   ;; (with-eval-after-load 'company
   ;;   (define-key company-active-map (kbd "C-n") #'company-select-next) 

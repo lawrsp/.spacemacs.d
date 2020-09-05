@@ -38,14 +38,15 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     (window-stash)
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
+     (window-stash)
+     (sis)
      (org :variables
           org-enable-verb-support t
           org-edit-src-content-indentation 0
           org-projectile-file "~/org/gtd/gtd.org"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WATCH(a)"  "BUG(b)" "|" "DONE(d)" "CANCELLED(c)"))
           ;; org-agenda-window-setup 'other-window
           org-agenda-files '("~/org/gtd/gtd.org"
                              "~/org/gtd/inbox.org"
@@ -62,7 +63,8 @@ This function should only modify configuration layer settings."
                                   ("j" "Journal entry" entry (function org-journal-find-location)
                                    "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
                                   )
-          org-refile-targets '(("~/org/gtd/gtd.org" :maxlevel . 3)
+          org-refile-targets '(("~/org/gtd/inbox.org" :maxlevel . 1)
+                               ("~/org/gtd/gtd.org" :maxlevel . 3)
                                ("~/org/gtd/someday.org" :level . 1)
                                ("~/org/gtd/tickler.org" :maxlevel . 2))
 
@@ -139,7 +141,7 @@ This function should only modify configuration layer settings."
      ;;import-js
      (javascript :variables
                  node-add-modules-path t
-                 ;; js2-strict-missing-semi-warning nil
+                 js2-strict-missing-semi-warning nil
                  javascript-backend 'tide
                  tide-completion-ignore-case t
                  ;; javascript-lsp-linter nil
@@ -168,8 +170,12 @@ This function should only modify configuration layer settings."
          )
      docker
      python
-     (treemacs :variables
-               treemacs-use-git-mode 'deferred)
+     (neotree :variables
+              neo-theme 'classic
+              neo-vc-integration '(char face)
+              )
+     ;; (treemacs :variables
+     ;;           treemacs-use-git-mode 'deferred)
      )
 
    ;; List of additional packages that will be installed without being
@@ -220,7 +226,7 @@ It should only modify the values of Spacemacs settings."
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
    ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
-   ;; (default spacemacs-27.1.pdmp)
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
@@ -319,7 +325,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-themes '(zenburn
                          solarized-light
                          spacemacs-light
-                         doom-one
+                         ;; doom-one
                          solarized-dark)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -577,6 +583,13 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
 
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -584,7 +597,11 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -633,54 +650,56 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (use-package doom-themes
-    :config
-    ;; Global settings (defaults)
-    ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-    ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    ;; (load-theme 'doom-one t)
-    ;; Enable flashing mode-line on errors
-    ;; (doom-themes-visual-bell-config)
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
-    ;; (doom-themes-neotree-config)
+  ;; (use-package doom-themes
+  ;;   :config
+  ;;   ;; Global settings (defaults)
+  ;;   ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  ;;   ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;   ;; (load-theme 'doom-one t)
+  ;;   ;; Enable flashing mode-line on errors
+  ;;   ;; (doom-themes-visual-bell-config)
+  ;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
+  ;;   ;; (doom-themes-neotree-config)
 
-    ;; not affected by variable-pitch
-    (setq doom-themes-treemacs-enable-variable-pitch nil)
-    ;; or for treemacs users
-    ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-    (setq doom-themes-treemacs-theme "doom-atom")
-    (doom-themes-treemacs-config)
+  ;;   ;; not affected by variable-pitch
+  ;;   (setq doom-themes-treemacs-enable-variable-pitch nil)
+  ;;   ;; or for treemacs users
+  ;;   ;; (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  ;;   (setq doom-themes-treemacs-theme "doom-atom")
+  ;;   (doom-themes-treemacs-config)
 
-    ;; Corrects (and improves) org-mode's native fontification.
-    ;; (doom-themes-org-config)
-    )
+  ;;   ;; Corrects (and improves) org-mode's native fontification.
+  ;;   ;; (doom-themes-org-config)
+  ;;   )
 
-  (with-eval-after-load 'treemacs-mode
-    (defun mytreemacs--create-file-react-hook (path)
-      (find-file path)
-      (insert "import React from 'react';\n")
-      (rjsx-mode))
+  ;; (with-eval-after-load 'treemacs-mode
+  ;;   (defun mytreemacs--create-file-react-hook (path)
+  ;;     (find-file path)
+  ;;     (insert "import React from 'react';\n")
+  ;;     (rjsx-mode))
 
-    (defun mytreemacs--create-file-go-hook (path)
-      (find-file path)
-      (let* ((name (file-name-directory path))
-             (pkgname (car (last (split-string name "/" t))))
-             (head (format "package %s\n" pkgname)))
-        (insert head)))
+  ;;   (defun mytreemacs--create-file-go-hook (path)
+  ;;     (find-file path)
+  ;;     (let* ((name (file-name-directory path))
+  ;;            (pkgname (car (last (split-string name "/" t))))
+  ;;            (head (format "package %s\n" pkgname)))
+  ;;       (insert head)))
 
-    (defun mytreemacs-create-file-react ()
-      (interactive)
-      (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
-        (treemacs-create-file)))
+  ;;   (defun mytreemacs-create-file-react ()
+  ;;     (interactive)
+  ;;     (let ((treemacs-create-file-functions 'mytreemacs--create-file-react-hook))
+  ;;       (treemacs-create-file)))
 
-    (defun mytreemacs-create-file-go ()
-      (interactive)
-      (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
-        (treemacs-create-file)))
+  ;;   (defun mytreemacs-create-file-go ()
+  ;;     (interactive)
+  ;;     (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
+  ;;       (treemacs-create-file)))
 
-    (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
-    (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go))
+  ;;   (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
+  ;;   (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go))
 
+
+  (setq auto-revert-check-vc-info t)
 
   ;; set cjk font face under graphic UI 
   (when (display-graphic-p)
@@ -767,5 +786,6 @@ before packages are loaded."
     (setq org-show-notification-handler
           (lambda (msg) (mytimer-notifier-notify msg))))
   )
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

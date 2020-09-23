@@ -75,7 +75,7 @@ This function should only modify configuration layer settings."
           org-journal-dir "~/org/journal/"
           org-journal-file-type 'monthly
           org-journal-date-format "%A, %Y-%m-%d"
-          org-journal-enable-agenda-integration t
+          org-journal-enable-agenda-integration nil
           org-journal-skip-carryover-drawers (list "LOGBOOK")
           org-icalendar-store-UID t
           org-icalendar-include-todo "all"
@@ -100,8 +100,8 @@ This function should only modify configuration layer settings."
                       auto-completion-complete-with-key-sequence "jk")
      better-defaults
      osx
+     version-control
      git
-     ;; version-control
      ;; helm 
      ivy
      ;; (ivy :variables
@@ -136,7 +136,7 @@ This function should only modify configuration layer settings."
           lsp-ui-sideline-enable nil)
      (json :variables
            json-fmt-tool 'prettier
-           json-backend 'lsp
+           json-backend 'company-json
            json-fmt-on-save t)
      ;;import-js
      (javascript :variables
@@ -172,6 +172,7 @@ This function should only modify configuration layer settings."
      python
      (neotree :variables
               neo-theme 'classic
+              neo-smart-open  t
               neo-vc-integration '(char face)
               )
      ;; (treemacs :variables
@@ -252,11 +253,13 @@ It should only modify the values of Spacemacs settings."
    ;; Setting this >= 1 MB should increase performance for lsp servers
    ;; in emacs 27.
    ;; (default (* 1024 1024))
-   dotspacemacs-read-process-output-max (* 1024 1024 2)
+   dotspacemacs-read-process-output-max (* 1024 1024 8)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -437,7 +440,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)

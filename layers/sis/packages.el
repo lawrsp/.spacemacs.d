@@ -5,8 +5,6 @@
 
 (defun sis/init-sis()
   (use-package sis
-    :defer t
-    :ensure t
     ;; :hook
     ;; enable the /follow context/ and /inline region/ mode for specific buffers
     ;; (((text-mode prog-mode) . sis-follow-context-mode)

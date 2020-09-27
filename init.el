@@ -328,7 +328,6 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-themes '(zenburn
                          solarized-light
                          spacemacs-light
-                         ;; doom-one
                          solarized-dark)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -345,7 +344,6 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-   ;; dotspacemacs-default-font '("Noto Sans Mono CJK SC" 
                                :size 14.0
                                :weight normal
                                :width normal)

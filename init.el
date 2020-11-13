@@ -42,6 +42,7 @@ This function should only modify configuration layer settings."
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (window-stash)
      (sis)
+     (evil-pinyin)
      (org :variables
           org-enable-verb-support t
           org-edit-src-content-indentation 0
@@ -88,8 +89,8 @@ This function should only modify configuration layer settings."
           ;; org-enable-reveal-js-support t
           ;; promodoro
           org-pomodoro-length 40
-          org-want-todo-bindings t)
-     (org-roam)
+          org-want-todo-bindings t
+          org-enable-roam-support t)
 
      ;; themes-megapack
      theming
@@ -140,7 +141,7 @@ This function should only modify configuration layer settings."
            json-fmt-on-save t)
      ;;import-js
      (javascript :variables
-                 node-add-modules-path t
+                 ;; node-add-modules-path t
                  js2-strict-missing-semi-warning nil
                  javascript-backend 'tide
                  tide-completion-ignore-case t
@@ -151,6 +152,7 @@ This function should only modify configuration layer settings."
      (typescript :variables
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
+                 typescript-linter 'eslint
                  typescript-lsp-linter nil)
      react
      (vue :variables vue-backend 'dumb)
@@ -509,7 +511,7 @@ It should only modify the values of Spacemacs settings."
                                                    neotree-mode
                                :size-limit-kb 1000)
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
@@ -529,7 +531,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path

@@ -171,7 +171,7 @@ This function should only modify configuration layer settings."
          ;; go-use-golangci-lint t
          )
      docker
-     python
+     (python :variables python-backend 'anaconda)
      (neotree :variables
               neo-theme 'classic
               neo-smart-open  t
@@ -755,6 +755,10 @@ before packages are loaded."
     (setq hippie-expand-try-functions-list
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
+
+  ;; set save on mac
+  (when (eq system-type 'darwin)
+    (define-key global-map  (kbd "H-s") 'save-buffer))
 
   ;; (defvar terminal-notifier-command (executable-find "terminal-notifier") "The path to terminal-notifier.")
   ;; (defun terminal-notifier-notify (title message)

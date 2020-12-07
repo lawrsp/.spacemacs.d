@@ -7,8 +7,6 @@
 (defun rime/init-rime ()
   (use-package rime
     :defer t
-    :init
-    (set)
     ))
 
 (defun rime/post-init-posframe ()

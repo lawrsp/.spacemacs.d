@@ -41,6 +41,17 @@ This function should only modify configuration layer settings."
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (window-stash)
+     ;; (chinese :variables
+     ;;          chinese-default-input-method 'pinyin
+     ;;          pyim-default-scheme 'rime-quanpin)
+     (rime :variables
+           rime-librime-root "~/.nix-profile"
+           rime-emacs-module-header-root "~/.nix-profile/include"
+           rime-share-data-dir "/usr/share/rime-data"
+           rime-user-data-dir  "~/config/rime"
+           rime-show-candidate 'posframe
+           ;; rime-cursor "˰"
+           )
      (sis)
      (evil-pinyin)
      (org :variables
@@ -91,7 +102,7 @@ This function should only modify configuration layer settings."
           org-pomodoro-length 40
           org-want-todo-bindings t
           org-enable-roam-support t)
-
+     valign
      ;; themes-megapack
      theming
      (auto-completion :variables
@@ -346,7 +357,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14.0
+                               :size 13.0
                                :weight normal
                                :width normal)
 
@@ -705,30 +716,31 @@ before packages are loaded."
   (setq auto-revert-check-vc-info t)
 
   ;; set cjk font face under graphic UI 
-  (when (display-graphic-p)
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-                        charset
-                        (font-spec :family "Noto Sans CJK SC"))))
+  ;; (when (display-graphic-p)
+  ;;   (dolist (charset '(kana han symbol cjk-misc bopomofo))
+  ;;     (set-fontset-font (frame-parameter nil 'font)
+  ;;                       charset
+  ;;                       (font-spec :family "Noto Sans Mono CJK SC"))))
 
+  ;; Notice: use valign instead
   ;; setup variable-pitch face
-  (custom-set-faces
-   '(variable-pitch ((t . (:family "Source Code Pro"))))
-   '(fixed-pitch ((t . (:family "Noto Sans Mono CJK SC")))))
+  ;; (custom-set-faces
+  ;;  '(variable-pitch ((t . (:family "Source Code Pro"))))
+  ;;  '(fixed-pitch ((t . (:family "Noto Sans Mono CJK SC")))))
 
   ;; use variable-pitch-mode in org-mode
   (with-eval-after-load 'org
     ;; (setq line-spacing 0)
-    (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-link nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-date nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-special-keyword nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
-    (add-hook 'org-mode-hook 'variable-pitch-mode)
+    ;; (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
+    ;; (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
+    ;; (add-hook 'org-mode-hook 'variable-pitch-mode)
     (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx)) 
     )
 

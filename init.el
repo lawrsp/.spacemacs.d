@@ -41,9 +41,6 @@ This function should only modify configuration layer settings."
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (window-stash)
-     ;; (chinese :variables
-     ;;          chinese-default-input-method 'pinyin
-     ;;          pyim-default-scheme 'rime-quanpin)
      (rime :variables
            rime-librime-root "~/.nix-profile"
            rime-emacs-module-header-root "~/.nix-profile/include"

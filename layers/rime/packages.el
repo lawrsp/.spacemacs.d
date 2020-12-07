@@ -7,6 +7,11 @@
 (defun rime/init-rime ()
   (use-package rime
     :defer t
+    :bind
+    (:map rime-active-mode-map
+          ("<tab>" . 'rime-inline-ascii)
+          :map rime-mode-map
+          ("C-`" . 'rime-send-keybinding))
     ))
 
 (defun rime/post-init-posframe ()

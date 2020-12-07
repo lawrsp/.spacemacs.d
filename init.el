@@ -757,8 +757,8 @@ before packages are loaded."
     (define-key yas-minor-mode-map (kbd "M-/") 'yas-expand))
 
   ;; set save on mac
-  (when (eq system-type 'darwin)
-    (define-key global-map  (kbd "H-s") 'save-buffer))
+  (when (spacemacs/system-is-mac)
+    (define-key global-map  (kbd-mac-command "s") 'save-buffer))
 
   ;; (defvar terminal-notifier-command (executable-find "terminal-notifier") "The path to terminal-notifier.")
   ;; (defun terminal-notifier-notify (title message)

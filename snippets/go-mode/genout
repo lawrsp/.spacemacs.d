@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: generate out 
+# key: //genout
+# group: generate
+# --
+
+//go:generate pigo convert --source *models.${1:Type} --target *${2:Target} --import isodate:coding.pickflames.com/pickflames/framework/types/isodate --import time:time --assign time.Time:*isodate.Date:isodate.DateFromTime --import models:coding.pickflames.com/pickflames/${3:server}/models --name  $1Out --error false --output gen_converts.go
+//go:generate pigo convert --source []*models.$1 --target []*$2 --import models:coding.pickflames.com/pickflames/order-server/models --assign *models.$1:*$2:$1Out --name  $1ListOut --error false --output gen_converts.go $GOFILE
+
+type $1 struct {
+$0
+}

@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: generate list param 
+# key: //genlistparam
+# group: generate
+# --
+
+//go:generate pigo checker -t ${1:Type}  -o gen_checkers.go  $GOFILE
+//go:generate pigo setdb -t $1 --import sql:coding.pickflames.com/pickflames/framework/sql  -o gen_query.go $GOFILE
+
+
+type $1 struct {
+$0
+}
+
+

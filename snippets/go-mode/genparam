@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: generate param  
+# key: //genparam
+# group: generate
+# --
+
+//go:generate pigo setter -t ${1:Type} --target models.${2:Target}--import  models:coding.pickflames.com/pickflames/${3:server}/models  --name ${4:Set} ${5:--withmap} ${6:--checkdiff} ${7:--withold} -o gen_setters.go  $GOFILE
+//go:generate pigo checker -t $1  -o gen_checkers.go  $GOFILE
+
+// $1
+type $1 struct {
+
+}
+

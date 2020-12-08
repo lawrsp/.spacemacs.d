@@ -760,6 +760,19 @@ before packages are loaded."
   ;;   (define-key company-active-map (kbd "C-p") #'company-select-previous)
   ;;   )
 
+  ;; (defun wsl-browse-url-xdg-open (url &optional ignored)
+  ;;   (interactive (browse-url-interactive-arg "URL: "))
+  ;;   (shell-command-to-string (concat "explorer.exe " url)))
+  ;; (advice-add #'browse-url-xdg-open :override #'wsl-browse-url-xdg-open)
+
+  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+        (cmd-args '("/c" "start")))
+    (when (file-exists-p cmd-exe)
+      (setq browse-url-generic-program  cmd-exe
+            browse-url-generic-args     cmd-args
+            browse-url-browser-function 'browse-url-generic)))
+    ;;  )
+
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list
           (remove 'yas-hippie-try-expand hippie-expand-try-functions-list))

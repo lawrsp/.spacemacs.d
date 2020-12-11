@@ -42,10 +42,7 @@ This function should only modify configuration layer settings."
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      (window-stash)
      (rime :variables
-           rime-librime-root "~/.nix-profile"
-           rime-emacs-module-header-root "~/.nix-profile/include"
-           rime-share-data-dir "/usr/share/rime-data"
-           rime-user-data-dir  "~/config/rime"
+           rime-user-data-dir  "~/config/rime-data"
            rime-show-candidate 'posframe
            ;; rime-cursor "˰"
            )
@@ -328,6 +325,14 @@ It should only modify the values of Spacemacs settings."
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
 
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
+
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
    dotspacemacs-initial-scratch-message nil
@@ -352,7 +357,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13.0
                                :weight normal
@@ -628,6 +635,7 @@ See the header of this file for more information."
   configuration.
   It is mostly for variables that should be set before packages are loaded.
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
+
   (setq configuration-layer-elpa-archives
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")

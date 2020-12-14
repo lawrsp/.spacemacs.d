@@ -96,7 +96,6 @@ This function should only modify configuration layer settings."
           org-pomodoro-length 40
           org-want-todo-bindings t
           org-enable-roam-support t)
-     valign
      ;; themes-megapack
      theming
      (auto-completion :variables

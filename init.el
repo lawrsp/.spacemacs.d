@@ -49,6 +49,7 @@ This function should only modify configuration layer settings."
      (sis)
      (evil-pinyin)
      (org :variables
+          org-enable-valign t
           org-enable-verb-support t
           org-edit-src-content-indentation 0
           org-projectile-file "~/org/gtd/gtd.org"
@@ -95,7 +96,8 @@ This function should only modify configuration layer settings."
           ;; promodoro
           org-pomodoro-length 40
           org-want-todo-bindings t
-          org-enable-roam-support t)
+          org-enable-roam-support t
+          org-roam-directory "~/org/notes")
      ;; themes-megapack
      theming
      (auto-completion :variables
@@ -157,7 +159,8 @@ This function should only modify configuration layer settings."
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
                  typescript-linter 'eslint
-                 typescript-lsp-linter nil)
+                 typescript-fmt-on-save t
+                 typescript-lsp-linter t)
      react
      (vue :variables vue-backend 'dumb)
      ;; (vue :variables
@@ -360,7 +363,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13.0
+                               :size 11.0
                                :weight normal
                                :width normal)
 

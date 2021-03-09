@@ -38,9 +38,21 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     better-defaults
+     osx
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
-     (window-stash)
+     ;; themes-megapack
+     theming
+     (neotree :variables
+              neo-theme 'classic
+              neo-smart-open  t
+              neo-vc-integration '(char face)
+              )
+     ;; (treemacs :variables
+     ;;           treemacs-use-git-mode 'deferred)
+     ;; window-stash
+     multiple-cursors
      (rime :variables
            rime-user-data-dir  "~/config/rime-data"
            rime-show-candidate 'posframe
@@ -48,6 +60,19 @@ This function should only modify configuration layer settings."
            )
      (sis)
      (evil-pinyin)
+     ;; spell-checking
+     syntax-checking
+     version-control
+     git
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
+                      ;; auto-completion-complete-with-key-sequence "jk"
+                      ;; auto-completion-enable-snippets-in-popup t
+                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/")
+     ;; helm 
+     ivy
+     ;; (ivy :variables
+     ;;      ivy-initial-inputs-alist nil)
      (org :variables
           org-enable-valign t
           org-enable-verb-support t
@@ -98,22 +123,6 @@ This function should only modify configuration layer settings."
           org-want-todo-bindings t
           org-enable-roam-support t
           org-roam-directory "~/org/notes")
-     ;; themes-megapack
-     theming
-     (auto-completion :variables
-                      auto-completion-enable-sort-by-usage t
-                      ;; auto-completion-enable-snippets-in-popup t
-                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/"
-                      auto-completion-complete-with-key-sequence "jk")
-     better-defaults
-     osx
-     version-control
-     git
-     ;; helm 
-     ivy
-     ;; (ivy :variables
-     ;;      ivy-initial-inputs-alist nil)
-     multiple-cursors
      emacs-lisp
      nginx
      sql
@@ -131,8 +140,6 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 25
             shell-default-position 'bottom)
-     ;; spell-checking
-     syntax-checking
      (lsp :variables
           lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
@@ -146,11 +153,14 @@ This function should only modify configuration layer settings."
            json-backend 'company-json
            json-fmt-on-save t)
      ;;import-js
+     (node :variables
+           node-add-modules-path t)
+     (tide :variables
+           tide-completion-ignore-case t)
      (javascript :variables
-                 ;; node-add-modules-path t
+                 js2-mode-show-strict-warnings nil
                  js2-strict-missing-semi-warning nil
                  javascript-backend 'tide
-                 tide-completion-ignore-case t
                  ;; javascript-lsp-linter nil
                  ;; javascript-import-tool 'import-js
                  javascript-fmt-on-save t
@@ -179,13 +189,6 @@ This function should only modify configuration layer settings."
          )
      docker
      (python :variables python-backend 'anaconda)
-     (neotree :variables
-              neo-theme 'classic
-              neo-smart-open  t
-              neo-vc-integration '(char face)
-              )
-     ;; (treemacs :variables
-     ;;           treemacs-use-git-mode 'deferred)
      )
 
    ;; List of additional packages that will be installed without being
@@ -775,13 +778,12 @@ before packages are loaded."
   ;;   (shell-command-to-string (concat "explorer.exe " url)))
   ;; (advice-add #'browse-url-xdg-open :override #'wsl-browse-url-xdg-open)
 
-  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
-        (cmd-args '("/c" "start")))
-    (when (file-exists-p cmd-exe)
-      (setq browse-url-generic-program  cmd-exe
-            browse-url-generic-args     cmd-args
-            browse-url-browser-function 'browse-url-generic)))
-    ;;  )
+  ;; (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+  ;;       (cmd-args '("/c" "start")))
+  ;;   (when (file-exists-p cmd-exe)
+  ;;     (setq browse-url-generic-program  cmd-exe
+  ;;           browse-url-generic-args     cmd-args
+  ;;           browse-url-browser-function 'browse-url-generic)))
 
   (with-eval-after-load 'yasnippet
     (setq hippie-expand-try-functions-list

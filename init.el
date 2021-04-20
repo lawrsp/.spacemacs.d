@@ -54,7 +54,8 @@ This function should only modify configuration layer settings."
      ;; window-stash
      multiple-cursors
      (rime :variables
-           rime-user-data-dir  "~/config/rime-data"
+           rime-share-data-dir  "~/config/rime/share"
+           rime-user-data-dir  "~/config/rime/user"
            rime-show-candidate 'posframe
            ;; rime-cursor "˰"
            )
@@ -179,13 +180,13 @@ This function should only modify configuration layer settings."
      (go :variables
          ;; go-backend 'go-mode
          go-backend 'lsp
-         go-tab-width nil
+         go-tab-width 2
          go-format-before-save t
          gofmt-command "goimports"
          ;;flycheck-go-build-install-deps t
          ;;godoc-at-point-function 'godoc-gogetdoc
          ;; go-install-after-save 'sync
-         ;; go-use-golangci-lint t
+         go-use-golangci-lint t
          )
      docker
      (python :variables python-backend 'anaconda)
@@ -313,14 +314,21 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -502,6 +510,10 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
@@ -535,9 +547,14 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
@@ -585,12 +602,18 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -624,7 +647,10 @@ It should only modify the values of Spacemacs settings."
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -642,9 +668,16 @@ See the header of this file for more information."
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq configuration-layer-elpa-archives
-        '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-          ("org-cn"   . "http://elpa.emacs-china.org/org/")
-          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+        ;; '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ;;   ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+        ;;   ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+        '(("melpa-cn" . "https://mirrors.163.com/elpa/melpa/")
+          ("org-cn"   . "https://mirrors.163.com/elpa/org/")
+          ("gnu-cn"   . "https://mirrors.163.com/elpa/gnu/")))
+
+        ;; '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+        ;;   ("org-cn"   . "http://elpa.emacs-china.org/org/")
+        ;;   ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
   (setq theming-modifications
         '((zenburn
            ;; zenburn set:
@@ -664,8 +697,8 @@ See the header of this file for more information."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -719,7 +752,7 @@ before packages are loaded."
   ;;     (let ((treemacs-create-file-functions 'mytreemacs--create-file-go-hook))
   ;;       (treemacs-create-file)))
 
-  ;;   (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react) 
+  ;;   (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react)
   ;;   (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go))
 
 
@@ -751,16 +784,16 @@ before packages are loaded."
     ;; (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
     ;; (add-hook 'org-mode-hook 'variable-pitch-mode)
-    (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx)) 
+    (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx))
     )
 
-  ;; (with-eval-after-load 'markdown-mode 
+  ;; (with-eval-after-load 'markdown-mode
   ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
   ;; (with-eval-after-load 'info-mode
   ;;   (add-hook 'Info-mode-hook 'set-buffer-variable-pitch))
 
-  (setq css-indent-offset 2) 
-  (setq js-indent-level 2) 
+  (setq css-indent-offset 2)
+  (setq js-indent-level 2)
 
   (add-to-list 'auto-mode-alist '("\\.air\\'" . python-mode))
 
@@ -769,7 +802,7 @@ before packages are loaded."
   (add-to-list 'auto-mode-alist '("\\.stylelintrc\\'" . json-mode))
 
   ;; (with-eval-after-load 'company
-  ;;   (define-key company-active-map (kbd "C-n") #'company-select-next) 
+  ;;   (define-key company-active-map (kbd "C-n") #'company-select-next)
   ;;   (define-key company-active-map (kbd "C-p") #'company-select-previous)
   ;;   )
 
@@ -823,9 +856,12 @@ before packages are loaded."
   ;; timer
   (with-eval-after-load 'org-pomodoro
     (defun mytimer-notifier-notify (msg)
-      (org-pomodoro-maybe-play-sound :pomodoro))
+      (org-pomodoro-maybe-play-sound :pomodoro)) 
     (setq org-show-notification-handler
-          (lambda (msg) (mytimer-notifier-notify msg))))
+          (lambda (msg) (mytimer-notifier-notify msg)))
+    (if-let (player (executable-find "paplay"))
+        (setq org-pomodoro-audio-player player))
+    )
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

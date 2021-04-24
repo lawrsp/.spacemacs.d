@@ -75,6 +75,7 @@ This function should only modify configuration layer settings."
      ;; (ivy :variables
      ;;      ivy-initial-inputs-alist nil)
      (org :variables
+          spaceline-org-clock-p t
           org-enable-valign t
           org-enable-verb-support t
           org-edit-src-content-indentation 0

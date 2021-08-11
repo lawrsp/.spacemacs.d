@@ -48,15 +48,23 @@ This function should only modify configuration layer settings."
               neo-theme 'classic
               neo-smart-open  t
               neo-vc-integration '(char face)
+              neo-default-system-application "mywslopen"
               )
      ;; (treemacs :variables
      ;;           treemacs-use-git-mode 'deferred)
      ;; window-stash
      multiple-cursors
+     ;; (chinese :variables
+     ;;          pyim-default-scheme 'rime
+     ;;          pyim-page-tooltip 'posframe
+     ;;          rime-share-data-dir  "~/config/rime/share"
+     ;;          rime-user-data-dir  "~/config/rime/user"
+     ;;          )
      (rime :variables
            rime-share-data-dir  "~/config/rime/share"
            rime-user-data-dir  "~/config/rime/user"
            rime-show-candidate 'posframe
+           ;; popup
            ;; rime-cursor "˰"
            )
      (sis)
@@ -71,7 +79,7 @@ This function should only modify configuration layer settings."
                       ;; auto-completion-enable-snippets-in-popup t
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/")
      ;; helm 
-     ivy
+     ivy 
      ;; (ivy :variables
      ;;      ivy-initial-inputs-alist nil)
      (org :variables
@@ -143,13 +151,14 @@ This function should only modify configuration layer settings."
             shell-default-height 25
             shell-default-position 'bottom)
      (lsp :variables
-          lsp-ui-doc-enable	nil
+          ;; lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
-          lsp-ui-flycheck-enable nil
-          lsp-ui-peek-enable t
+          ;; lsp-ui-flycheck-enable nil
+          ;; lsp-ui-peek-enable t
           ;; lsp-ui-sideline-delay 0.8
           ;; lsp-ui-sideline-update-mode 'line
-          lsp-ui-sideline-enable nil)
+          ;; lsp-ui-sideline-enable nil
+          )
      (json :variables
            json-fmt-tool 'prettier
            json-backend 'company-json
@@ -327,6 +336,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
 
    ;; The minimum delay in seconds between number key presses. (default 0.4)
    dotspacemacs-startup-buffer-multi-digit-delay 0.4
@@ -519,8 +531,8 @@ It should only modify the values of Spacemacs settings."
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
    ;; numbers are relative. If set to `visual', line numbers are also relative,
-   ;; but lines are only visual lines are counted. For example, folded lines
-   ;; will not be counted and wrapped lines are counted as multiple lines.
+   ;; but only visual lines are counted. For example, folded lines will not be
+   ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
    ;;   :visual nil
@@ -623,12 +635,15 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
-   ;; If non nil activate `clean-aindent-mode' which tries to correct
-   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; If non-nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfere with mode specific
    ;; indent handling like has been reported for `go-mode'.
    ;; If it does deactivate it here.
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
+
+   ;; Accept SPC as y for prompts if non-nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
 
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
@@ -647,7 +662,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-pretty-docs nil
 
    ;; If nil the home buffer shows the full path of agenda items
-   ;; and todos. If non nil only the file name is shown.
+   ;; and todos. If non-nil only the file name is shown.
    dotspacemacs-home-shorten-agenda-source nil
 
    ;; If non-nil then byte-compile some of Spacemacs files.
@@ -668,17 +683,17 @@ See the header of this file for more information."
   It is mostly for variables that should be set before packages are loaded.
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  (setq configuration-layer-elpa-archives
+  ;; (setq configuration-layer-elpa-archives
         ;; '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ;;   ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-        ;;   ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-        '(("melpa-cn" . "https://mirrors.163.com/elpa/melpa/")
-          ("org-cn"   . "https://mirrors.163.com/elpa/org/")
-          ("gnu-cn"   . "https://mirrors.163.com/elpa/gnu/")))
-
+        ;;   ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+        ;; '(("melpa-cn" . "https://mirrors.163.com/elpa/melpa/")
+        ;;   ("org-cn"   . "https://mirrors.163.com/elpa/org/")
+        ;;   ("gnu-cn"   . "https://mirrors.163.com/elpa/gnu/"))
         ;; '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
         ;;   ("org-cn"   . "http://elpa.emacs-china.org/org/")
-        ;;   ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+        ;;   ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
+        ;; )
   (setq theming-modifications
         '((zenburn
            ;; zenburn set:
@@ -756,7 +771,12 @@ before packages are loaded."
   ;;   (define-key treemacs-mode-map (kbd "cr") #'mytreemacs-create-file-react)
   ;;   (define-key treemacs-mode-map (kbd "cg") #'mytreemacs-create-file-go))
 
+  ;; imput mothed
+  ;; (with-eval-after-load "liberime"
+  ;;   (liberime-try-select-schema "luna_pinyin_simp")
+  ;;   (setq pyim-default-scheme 'rime-quanpin))
 
+  (setq tab-always-indent t)
   (setq auto-revert-check-vc-info t)
 
   ;; set cjk font face under graphic UI 

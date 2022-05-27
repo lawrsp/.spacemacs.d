@@ -84,7 +84,7 @@ This function should only modify configuration layer settings."
      ;;      ivy-initial-inputs-alist nil)
      (org :variables
           spaceline-org-clock-p t
-          org-enable-valign t
+          ;; org-enable-valign t
           org-enable-verb-support t
           org-edit-src-content-indentation 0
           org-projectile-file "~/org/gtd/gtd.org"
@@ -111,7 +111,7 @@ This function should only modify configuration layer settings."
                                ("~/org/gtd/tickler.org" :maxlevel . 2))
 
           ;; for org-brain
-          org-brain-path "~/org/notes"
+          ;; org-brain-path "~/org/notes"
           ;; for org-journal
           org-enable-org-journal-support t
           org-journal-dir "~/org/journal/"
@@ -123,16 +123,19 @@ This function should only modify configuration layer settings."
           org-icalendar-include-todo "all"
           org-icalendar-combined-agenda-file "~/org/journal/export-journal.ics"
           org-extend-today-until 4
-          ;; org-enable-github-support t ;; org-enable-bootstrap-support t
-          ;; org-enable-hugo-support t
-          ;; org-enable-trello-support t
-          ;; org-enable-org-journal-support t
-          ;; org-enable-reveal-js-support t
+          org-enable-github-support t
+          ;; org-enable-bootstrap-support t
+          org-enable-hugo-support t
+          org-enable-trello-support t
+          org-enable-org-journal-support t
+          org-enable-reveal-js-support t
           ;; promodoro
           org-pomodoro-length 40
           org-want-todo-bindings t
           org-enable-roam-support t
-          org-roam-directory "~/org/notes")
+          org-roam-directory "~/org/notes"
+          org-roam-v2-ack t
+          )
      emacs-lisp
      nginx
      sql
@@ -140,6 +143,7 @@ This function should only modify configuration layer settings."
      (html :variables
            web-fmt-tool 'prettier)
      yaml
+     csharp
      (markdown :variables
                markdown-mmm-auto-modes '(
                                          "go"
@@ -198,6 +202,7 @@ This function should only modify configuration layer settings."
          ;; go-install-after-save 'sync
          go-use-golangci-lint t
          )
+     (rust :variables rust-backend 'lsp)
      docker
      (python :variables python-backend 'anaconda)
      )
@@ -387,7 +392,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 11.0
+                               :size 14.0
                                :weight normal
                                :width normal)
 
@@ -745,6 +750,9 @@ before packages are loaded."
   ;;   ;; (doom-themes-org-config)
   ;;   )
 
+  (with-eval-after-load 'undo-tree
+   (setq undo-tree-auto-save-history nil))
+
   ;; (with-eval-after-load 'treemacs-mode
   ;;   (defun mytreemacs--create-file-react-hook (path)
   ;;     (find-file path)
@@ -821,6 +829,7 @@ before packages are loaded."
   (add-to-list 'auto-mode-alist '("\\.eslintrc\\'" . json-mode))
   (add-to-list 'auto-mode-alist '("\\.prettierrc\\'" . json-mode))
   (add-to-list 'auto-mode-alist '("\\.stylelintrc\\'" . json-mode))
+  (add-to-list 'auto-mode-alist '("\\.dbj\\'" . js2-mode))
 
   ;; (with-eval-after-load 'company
   ;;   (define-key company-active-map (kbd "C-n") #'company-select-next)
@@ -831,6 +840,21 @@ before packages are loaded."
   ;;   (interactive (browse-url-interactive-arg "URL: "))
   ;;   (shell-command-to-string (concat "explorer.exe " url)))
   ;; (advice-add #'browse-url-xdg-open :override #'wsl-browse-url-xdg-open)
+
+  (defun --system-is-wsl ()
+    (if (and (spacemacs/system-is-linux)
+         (string-match
+          "Linux.*Microsoft.*Linux"
+          (shell-command-to-string "uname -a"))
+         )
+        t
+      nil))
+
+  (when (--system-is-wsl) 
+    (setq
+     browse-url-generic-program  "/mnt/c/Windows/System32/cmd.exe"
+     browse-url-generic-args     '("/c" "start")
+     browse-url-browser-function #'browse-url-generic))
 
   ;; (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
   ;;       (cmd-args '("/c" "start")))

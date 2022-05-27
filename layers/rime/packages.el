@@ -37,7 +37,7 @@
             ;; 在任意英文字符且有空格之后
             ;; rime-predicate-space-after-ascii-p
             ;; 在中文字符且有空格之后
-            rime-predicate-space-after-cc-p
+            ;; rime-predicate-space-after-cc-p
             ;; 将要输入的为大写字母时
             ;; rime-predicate-current-uppercase-letter-p
             ))

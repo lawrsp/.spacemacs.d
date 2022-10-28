@@ -61,14 +61,16 @@ This function should only modify configuration layer settings."
      ;;          rime-user-data-dir  "~/config/rime/user"
      ;;          )
      (rime :variables
-           rime-share-data-dir  "~/config/rime/share"
-           rime-user-data-dir  "~/config/rime/user"
+           rime-share-data-dir (concat (getenv "XDG_CONFIG_HOME") "/rime/share")
+           rime-user-data-dir (concat (getenv "XDG_CONFIG_HOME") "/rime/user")
            rime-show-candidate 'posframe
            ;; popup
            ;; rime-cursor "˰"
            )
      (sis)
      (evil-pinyin)
+     (tide :variables
+           tide-completion-ignore-case t)
      ;; spell-checking
      syntax-checking
      version-control
@@ -78,13 +80,13 @@ This function should only modify configuration layer settings."
                       ;; auto-completion-complete-with-key-sequence "jk"
                       ;; auto-completion-enable-snippets-in-popup t
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/")
-     ;; helm 
-     ivy 
+     ;; helm
+     ivy
      ;; (ivy :variables
      ;;      ivy-initial-inputs-alist nil)
      (org :variables
           spaceline-org-clock-p t
-          ;; org-enable-valign t
+          org-enable-valign t
           org-enable-verb-support t
           org-edit-src-content-indentation 0
           org-projectile-file "~/org/gtd/gtd.org"
@@ -126,17 +128,23 @@ This function should only modify configuration layer settings."
           org-enable-github-support t
           ;; org-enable-bootstrap-support t
           org-enable-hugo-support t
-          org-enable-trello-support t
+          ;; org-enable-trello-support t
           org-enable-org-journal-support t
           org-enable-reveal-js-support t
           ;; promodoro
           org-pomodoro-length 40
           org-want-todo-bindings t
           org-enable-roam-support t
+          org-enable-roam-ui t
           org-roam-directory "~/org/notes"
+          org-roam-capture-templates '(("d" "default" plain "%?"
+                                        :target (file+head "${slug}.org"
+                                                           "#+title: ${title}\n#+created_at: %<%Y-%m-%d %H:%M:%S>")
+                                        :unnarrowed t))
           org-roam-v2-ack t
           )
      emacs-lisp
+     windows-scripts 
      nginx
      sql
      prettier
@@ -144,16 +152,10 @@ This function should only modify configuration layer settings."
            web-fmt-tool 'prettier)
      yaml
      csharp
-     (markdown :variables
-               markdown-mmm-auto-modes '(
-                                         "go"
-                                         ("javascript" "rjsx")
-                                         ("html" "web")
-                                         ("elisp" "emacs-lisp"))
-               markdown-live-preview-engine 'vmd)
      (shell :variables
             shell-default-height 25
             shell-default-position 'bottom)
+     
      (lsp :variables
           ;; lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
@@ -170,8 +172,6 @@ This function should only modify configuration layer settings."
      ;;import-js
      (node :variables
            node-add-modules-path t)
-     (tide :variables
-           tide-completion-ignore-case t)
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  js2-strict-missing-semi-warning nil
@@ -183,14 +183,14 @@ This function should only modify configuration layer settings."
      (typescript :variables
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
-                 typescript-linter 'eslint
-                 typescript-fmt-on-save t
-                 typescript-lsp-linter t)
+                 ;; tide-tsserver-executable "~/.npm-packages/bin/tsserver"
+                 ;; typescript-linter 'eslint
+                 ;; typescript-lsp-linter nil
+                 typescript-fmt-on-save t)
      react
      (vue :variables vue-backend 'dumb)
      ;; (vue :variables
      ;;      vue-format-before-save t)
-
      (go :variables
          ;; go-backend 'go-mode
          go-backend 'lsp
@@ -205,6 +205,13 @@ This function should only modify configuration layer settings."
      (rust :variables rust-backend 'lsp)
      docker
      (python :variables python-backend 'anaconda)
+     (markdown :variables
+               markdown-mmm-auto-modes '(
+                                         "go"
+                                         ("javascript" "rjsx")
+                                         ("html" "web")
+                                         ("elisp" "emacs-lisp"))
+               markdown-live-preview-engine 'vmd)
      )
 
    ;; List of additional packages that will be installed without being
@@ -382,7 +389,8 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   ;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)

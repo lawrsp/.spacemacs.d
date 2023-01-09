@@ -44,14 +44,18 @@ This function should only modify configuration layer settings."
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
      ;; themes-megapack
      theming
-     (neotree :variables
-              neo-theme 'classic
-              neo-smart-open  t
-              neo-vc-integration '(char face)
-              neo-default-system-application "mywslopen"
-              )
-     ;; (treemacs :variables
-     ;;           treemacs-use-git-mode 'deferred)
+     ;; (neotree :variables
+     ;;          neo-theme 'classic
+     ;;          neo-smart-open  t
+     ;;          neo-vc-integration '(char face)
+     ;;          neo-default-system-application "mywslopen"
+     ;;          )
+     (treemacs :variables
+               treemacs-collapse-dirs 3
+               treemacs-use-filewatch-mode t
+               treemacs-use-follow-mode t
+               treemacs-use-all-the-icons-theme t
+               treemacs-use-git-mode 'deferred)
      ;; window-stash
      multiple-cursors
      ;; (chinese :variables
@@ -68,17 +72,17 @@ This function should only modify configuration layer settings."
            ;; rime-cursor "˰"
            )
      (sis)
-     (evil-pinyin)
      (tide :variables
            tide-completion-ignore-case t)
+     ;; (evil-pinyin)
      ;; spell-checking
      syntax-checking
      version-control
      git
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
-                      ;; auto-completion-complete-with-key-sequence "jk"
-                      ;; auto-completion-enable-snippets-in-popup t
+                      auto-completion-complete-with-key-sequence "jk"
+                      auto-completion-enable-snippets-in-popup t
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets/")
      ;; helm
      ivy
@@ -141,8 +145,7 @@ This function should only modify configuration layer settings."
                                         :target (file+head "${slug}.org"
                                                            "#+title: ${title}\n#+created_at: %<%Y-%m-%d %H:%M:%S>")
                                         :unnarrowed t))
-          org-roam-v2-ack t
-          )
+          org-roam-v2-ack t)
      emacs-lisp
      windows-scripts 
      nginx
@@ -760,6 +763,26 @@ before packages are loaded."
 
   (with-eval-after-load 'undo-tree
    (setq undo-tree-auto-save-history nil))
+
+  ;; ;; patch neotree-show
+  ;; (with-eval-after-load 'neotree
+  ;;   (defun neotree-show ()
+  ;;     "Show the NeoTree window."
+  ;;     (interactive)
+  ;;     (let ((cw (selected-window))
+  ;;           (path (buffer-file-name)))  ;; save current window and buffer
+  ;;       (if neo-smart-open
+  ;;           (progn
+  ;;             (when (and (fboundp 'projectile-project-p)
+  ;;                        (projectile-project-p)
+  ;;                        (fboundp 'projectile-project-root)
+  ;;                        (setq path (file-truename path)))
+  ;;               (neotree-dir (projectile-project-root)))
+  ;;             (neotree-find path))
+  ;;         (neo-global--open))
+  ;;       (neo-global--select-window)
+  ;;       (when neo-toggle-window-keep-p
+  ;;         (select-window cw)))))
 
   ;; (with-eval-after-load 'treemacs-mode
   ;;   (defun mytreemacs--create-file-react-hook (path)

@@ -158,7 +158,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 25
             shell-default-position 'bottom)
-     
+     c-c++ 
      (lsp :variables
           ;; lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
@@ -187,7 +187,7 @@ This function should only modify configuration layer settings."
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
                  ;; tide-tsserver-executable "~/.npm-packages/bin/tsserver"
-                 ;; typescript-linter 'eslint
+                 typescript-linter 'eslint
                  ;; typescript-lsp-linter nil
                  typescript-fmt-on-save t)
      react

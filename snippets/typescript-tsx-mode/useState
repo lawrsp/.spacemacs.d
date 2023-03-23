@@ -5,4 +5,4 @@
 # --
 
 
-const [$1, set${1:$(upcase-initials yas-text)}] = useState($0);
+const [$1, set${1:$(upcase-initials yas-text)}] = React.useState($0);

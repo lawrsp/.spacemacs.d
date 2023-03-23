@@ -72,11 +72,9 @@ This function should only modify configuration layer settings."
            ;; rime-cursor "˰"
            )
      (sis)
-     (tide :variables
-           tide-completion-ignore-case t)
-     ;; (evil-pinyin)
      ;; spell-checking
      syntax-checking
+     (evil-pinyin)
      version-control
      git
      (auto-completion :variables
@@ -147,7 +145,7 @@ This function should only modify configuration layer settings."
                                         :unnarrowed t))
           org-roam-v2-ack t)
      emacs-lisp
-     windows-scripts 
+     windows-scripts
      nginx
      sql
      prettier
@@ -157,8 +155,8 @@ This function should only modify configuration layer settings."
      csharp
      (shell :variables
             shell-default-height 25
-            shell-default-position 'bottom)
-     c-c++ 
+            shell-default-position 'bottom) 
+     c-c++
      (lsp :variables
           ;; lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
@@ -168,6 +166,8 @@ This function should only modify configuration layer settings."
           ;; lsp-ui-sideline-update-mode 'line
           ;; lsp-ui-sideline-enable nil
           )
+     (tide :variables
+           tide-completion-ignore-case t)
      (json :variables
            json-fmt-tool 'prettier
            json-backend 'company-json
@@ -186,6 +186,7 @@ This function should only modify configuration layer settings."
      (typescript :variables
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
+                 ;; typescript-backend 'lsp
                  ;; tide-tsserver-executable "~/.npm-packages/bin/tsserver"
                  typescript-linter 'eslint
                  ;; typescript-lsp-linter nil
@@ -215,6 +216,8 @@ This function should only modify configuration layer settings."
                                          ("html" "web")
                                          ("elisp" "emacs-lisp"))
                markdown-live-preview-engine 'vmd)
+     (mind-wave :variables
+                mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
      )
 
    ;; List of additional packages that will be installed without being

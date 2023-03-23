@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: className=
+# key: cls=
+# group: react-props
+# --
+
+className={${1:classes.}$0}

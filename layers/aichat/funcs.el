@@ -34,7 +34,6 @@
     "aii" 'aichat-bingai-replace-or-insert
     "aioa" 'aichat-openai-assistant))
 
-
 (defun spacemacs//aichat-setup-tools ()
   (aichat-bingai-prompt-create "translator"
                                :input-prompt "请翻译: "

@@ -218,6 +218,8 @@ This function should only modify configuration layer settings."
                markdown-live-preview-engine 'vmd)
      (mind-wave :variables
                 mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
+     (aichat :variables
+             aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json"))
      )
 
    ;; List of additional packages that will be installed without being

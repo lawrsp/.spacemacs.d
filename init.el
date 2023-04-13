@@ -219,7 +219,9 @@ This function should only modify configuration layer settings."
      (mind-wave :variables
                 mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
      (aichat :variables
-             aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json"))
+             aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json")
+             aichat-bingai-chat-file "~/.aichat/bing/chat.md"
+             aichat-openai-chat-directory "~/.aichat/openai")
      )
 
    ;; List of additional packages that will be installed without being

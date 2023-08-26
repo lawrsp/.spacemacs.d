@@ -50,6 +50,8 @@ This function should only modify configuration layer settings."
      ;;          neo-vc-integration '(char face)
      ;;          neo-default-system-application "mywslopen"
      ;;          )
+     ;; (spacemacs-modeline :variables
+     ;;                     doom-modeline-buffer-file-name-style 'relative-from-project)
      (treemacs :variables
                treemacs-collapse-dirs 3
                treemacs-use-filewatch-mode t
@@ -57,7 +59,8 @@ This function should only modify configuration layer settings."
                treemacs-use-all-the-icons-theme t
                treemacs-use-git-mode 'deferred)
      ;; window-stash
-     multiple-cursors
+     (multiple-cursors :variables
+                       multiple-cursors-backend 'evil-mc)
      ;; (chinese :variables
      ;;          pyim-default-scheme 'rime
      ;;          pyim-page-tooltip 'posframe
@@ -134,16 +137,16 @@ This function should only modify configuration layer settings."
           org-enable-org-journal-support t
           org-enable-reveal-js-support t
           ;; promodoro
-          org-pomodoro-length 40
+          org-pomodoro-length 25
           org-want-todo-bindings t
           org-enable-roam-support t
           org-enable-roam-ui t
           org-roam-directory "~/org/notes"
+          org-roam-node-display-template (concat "${title} " (propertize "${tags:100}" 'face 'org-tag))
           org-roam-capture-templates '(("d" "default" plain "%?"
                                         :target (file+head "${slug}.org"
                                                            "#+title: ${title}\n#+created_at: %<%Y-%m-%d %H:%M:%S>")
-                                        :unnarrowed t))
-          org-roam-v2-ack t)
+                                        :unnarrowed t)))
      emacs-lisp
      windows-scripts
      nginx
@@ -158,6 +161,7 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom) 
      c-c++
      (lsp :variables
+          lsp-ui-doc-show-with-cursor t
           ;; lsp-ui-doc-enable	nil
           ;; lsp-ui-doc-delay 0.8
           ;; lsp-ui-flycheck-enable nil
@@ -216,8 +220,8 @@ This function should only modify configuration layer settings."
                                          ("html" "web")
                                          ("elisp" "emacs-lisp"))
                markdown-live-preview-engine 'vmd)
-     (mind-wave :variables
-                mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
+     ;; (mind-wave :variables
+     ;;            mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
      (aichat :variables
              aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json")
              aichat-bingai-chat-file "~/.aichat/bing/chat.md"
@@ -231,7 +235,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(sqlite3)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -256,9 +260,13 @@ It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; If non-nil then enable support for the portable dumper. You'll need
-   ;; to compile Emacs 27 from source following the instructions in file
+   ;; If non-nil then enable support for the portable dumper. You'll need to
+   ;; compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
+   ;;
+   ;; WARNING: pdumper does not work with Native Compilation, so it's disabled
+   ;; regardless of the following setting when native compilation is in effect.
+   ;;
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
@@ -343,6 +351,13 @@ It should only modify the values of Spacemacs settings."
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'official
 
+   ;; Scale factor controls the scaling (size) of the startup banner. Default
+   ;; value is `auto' for scaling the logo automatically to fit all buffer
+   ;; contents, to a maximum of the full image height and a minimum of 3 line
+   ;; heights. If set to a number (int or float) it is used as a constant
+   ;; scaling factor for the default logo size.
+   dotspacemacs-startup-banner-scale 'auto
+
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -364,6 +379,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; The minimum delay in seconds between number key presses. (default 0.4)
    dotspacemacs-startup-buffer-multi-digit-delay 0.4
+
+   ;; If non-nil, show file icons for entries and headings on Spacemacs home buffer.
+   ;; This has no effect in terminal or if "all-the-icons" package or the font
+   ;; is not installed. (default nil)
+   dotspacemacs-startup-buffer-show-icons nil
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -399,8 +419,8 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
-   dotspacemacs-mode-line-theme 'doom
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.2)
+   ;; dotspacemacs-mode-line-theme '(doom :separator wave :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -512,12 +532,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
-   ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   ;; (default t) (Emacs 24.4+ only)
+   dotspacemacs-maximized-at-startup t
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
-   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
-   ;; borderless fullscreen. (default nil)
+   ;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
+   ;; without external boxes. Also disables the internal border. (default nil)
    dotspacemacs-undecorated-at-startup nil
 
    ;; A value from the range (0..100), in increasing opacity, which describes
@@ -529,6 +549,11 @@ It should only modify the values of Spacemacs settings."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
+
+   ;; A value from the range (0..100), in increasing opacity, which describes the
+   ;; transparency level of a frame background when it's active or selected. Transparency
+   ;; can be toggled through `toggle-background-transparency'. (default 90)
+   dotspacemacs-background-transparency 90
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -648,7 +673,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
-   ;; Show trailing whitespace (default t)
+   ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
+   ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
+   ;; (default t)
    dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
@@ -697,7 +724,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+)
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -736,7 +764,8 @@ See the header of this file for more information."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
+dump."
+)
 
 
 (defun dotspacemacs/user-config ()
@@ -767,6 +796,7 @@ before packages are loaded."
   ;;   ;; Corrects (and improves) org-mode's native fontification.
   ;;   ;; (doom-themes-org-config)
   ;;   )
+
 
   (with-eval-after-load 'undo-tree
    (setq undo-tree-auto-save-history nil))

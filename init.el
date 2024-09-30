@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
                treemacs-use-filewatch-mode t
                treemacs-use-follow-mode t
                treemacs-use-all-the-icons-theme t
-               treemacs-use-git-mode 'deferred)
+               treemacs-use-git-mode 'simple)
      ;; window-stash
      (multiple-cursors :variables
                        multiple-cursors-backend 'evil-mc)
@@ -68,6 +68,8 @@ This function should only modify configuration layer settings."
      ;;          rime-user-data-dir  "~/config/rime/user"
      ;;          )
      (rime :variables
+           rime-librime-root "~/.nix-profile"
+           rime-emacs-module-header-root "~/.nix-profile/include"
            rime-share-data-dir (concat (getenv "XDG_CONFIG_HOME") "/rime/share")
            rime-user-data-dir (concat (getenv "XDG_CONFIG_HOME") "/rime/user")
            rime-show-candidate 'posframe
@@ -75,6 +77,7 @@ This function should only modify configuration layer settings."
            ;; rime-cursor "˰"
            )
      (sis)
+     (llm)
      ;; spell-checking
      syntax-checking
      (evil-pinyin)
@@ -146,7 +149,10 @@ This function should only modify configuration layer settings."
           org-roam-capture-templates '(("d" "default" plain "%?"
                                         :target (file+head "${slug}.org"
                                                            "#+title: ${title}\n#+created_at: %<%Y-%m-%d %H:%M:%S>")
-                                        :unnarrowed t)))
+                                        :unnarrowed t))
+          org-download-screenshot-method "powershell.exe -Command \"(Get-Clipboard -Format image).Save('$(wslpath -w %s)')\""
+          org-download-heading-lvl nil
+          org-download-image-dir "./pics")
      emacs-lisp
      windows-scripts
      nginx
@@ -156,10 +162,11 @@ This function should only modify configuration layer settings."
            web-fmt-tool 'prettier)
      yaml
      csharp
+     (c-c++ :variables
+            c-c++-backend 'lsp-clangd)
      (shell :variables
             shell-default-height 25
-            shell-default-position 'bottom) 
-     c-c++
+            shell-default-position 'bottom)
      (lsp :variables
           lsp-ui-doc-show-with-cursor t
           ;; lsp-ui-doc-enable	nil
@@ -212,7 +219,10 @@ This function should only modify configuration layer settings."
          )
      (rust :variables rust-backend 'lsp)
      docker
-     (python :variables python-backend 'anaconda)
+     (python :variables
+             python-backend 'lsp
+             python-format-on-save t
+             python-lsp-server 'pyright)
      (markdown :variables
                markdown-mmm-auto-modes '(
                                          "go"
@@ -222,10 +232,10 @@ This function should only modify configuration layer settings."
                markdown-live-preview-engine 'vmd)
      ;; (mind-wave :variables
      ;;            mind-wave-api-key-path  (concat (getenv "XDG_CONFIG_HOME") "/chatgpt/api_key.txt"))
-     (aichat :variables
-             aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json")
-             aichat-bingai-chat-file "~/.aichat/bing/chat.md"
-             aichat-openai-chat-directory "~/.aichat/openai")
+     ;; (aichat :variables
+     ;;         aichat-bingai-cookies-file (concat (getenv "XDG_CONFIG_HOME") "/bing/cookies.json")
+     ;;         aichat-bingai-chat-file "~/.aichat/bing/chat.md"
+     ;;         aichat-openai-chat-directory "~/.aichat/openai")
      )
 
    ;; List of additional packages that will be installed without being
@@ -430,7 +440,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14.0
+                               :size 18.0
                                :weight normal
                                :width normal)
 
@@ -594,15 +604,15 @@ It should only modify the values of Spacemacs settings."
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers '(:relative nil
-                               :visual nil
-                               :disabled-for-modes dired-mode
-                                                   doc-view-mode
-                                                   markdown-mode
-                                                   org-mode
-                                                   pdf-view-mode
-                                                   text-mode
-                                                   neotree-mode
-                               :size-limit-kb 1000)
+                                         :visual nil
+                                         :disabled-for-modes dired-mode
+                                         doc-view-mode
+                                         markdown-mode
+                                         org-mode
+                                         pdf-view-mode
+                                         text-mode
+                                         neotree-mode
+                                         :size-limit-kb 1000)
 
    ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
@@ -725,7 +735,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (spacemacs/load-spacemacs-env)
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -734,17 +744,22 @@ See the header of this file for more information."
   It is mostly for variables that should be set before packages are loaded.
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  ;; (setq configuration-layer-elpa-archives
-        ;; '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-        ;;   ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-        ;;   ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
-        ;; '(("melpa-cn" . "https://mirrors.163.com/elpa/melpa/")
-        ;;   ("org-cn"   . "https://mirrors.163.com/elpa/org/")
-        ;;   ("gnu-cn"   . "https://mirrors.163.com/elpa/gnu/"))
-        ;; '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-        ;;   ("org-cn"   . "http://elpa.emacs-china.org/org/")
-        ;;   ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
-        ;; )
+  ;;(setq configuration-layer-elpa-archives
+  ;;     (("melpa-stable" . "stable.melpa.org/packages/")
+  ;; ("melpa" . "melpa.org/packages/")
+  ;;     ("gnu" . "elpa.gnu.org/packages/")
+  ;;    ("nongnu" . "elpa.nongnu.org/nongnu/"))
+  ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+  ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+  ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+  ;; '(("melpa-cn" . "https://mirrors.163.com/elpa/melpa/")
+  ;;   ("org-cn"   . "https://mirrors.163.com/elpa/org/")
+  ;;   ("gnu-cn"   . "https://mirrors.163.com/elpa/gnu/"))
+  ;; '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+  ;;   ("org-cn"   . "http://elpa.emacs-china.org/org/")
+  ;;   ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
+  ;; )
+  ;;  )
   (setq theming-modifications
         '((zenburn
            ;; zenburn set:
@@ -765,7 +780,7 @@ See the header of this file for more information."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -799,7 +814,7 @@ before packages are loaded."
 
 
   (with-eval-after-load 'undo-tree
-   (setq undo-tree-auto-save-history nil))
+    (setq undo-tree-auto-save-history nil))
 
   ;; ;; patch neotree-show
   ;; (with-eval-after-load 'neotree
@@ -855,7 +870,7 @@ before packages are loaded."
   (setq tab-always-indent t)
   (setq auto-revert-check-vc-info t)
 
-  ;; set cjk font face under graphic UI 
+  ;; set cjk font face under graphic UI
   ;; (when (display-graphic-p)
   ;;   (dolist (charset '(kana han symbol cjk-misc bopomofo))
   ;;     (set-fontset-font (frame-parameter nil 'font)
@@ -881,6 +896,7 @@ before packages are loaded."
     ;; (set-face-attribute 'org-todo nil :inherit 'fixed-pitch)
     ;; (set-face-attribute 'org-done nil :inherit 'fixed-pitch)
     ;; (add-hook 'org-mode-hook 'variable-pitch-mode)
+    (add-to-list 'org-src-lang-modes (cons "godot" 'python))
     (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx))
     )
 
@@ -911,14 +927,14 @@ before packages are loaded."
 
   (defun --system-is-wsl ()
     (if (and (spacemacs/system-is-linux)
-         (string-match
-          "Linux.*Microsoft.*Linux"
-          (shell-command-to-string "uname -a"))
-         )
+             (string-match
+              "Linux.*Microsoft.*Linux"
+              (shell-command-to-string "uname -a"))
+             )
         t
       nil))
 
-  (when (--system-is-wsl) 
+  (when (--system-is-wsl)
     (setq
      browse-url-generic-program  "/mnt/c/Windows/System32/cmd.exe"
      browse-url-generic-args     '("/c" "start")
@@ -954,7 +970,7 @@ before packages are loaded."
   ;;   )
   ;; (defun timed-notification(time msg)
   ;;   (interactive "sNotification when (e.g: 2 minutes, 60 seconds, 3 days): \nsMessage: ")
-  ;;   (run-at-time time nil (lambda (msg) (terminal-notifier-notify "Emacs" msg)) msg)) 
+  ;;   (run-at-time time nil (lambda (msg) (terminal-notifier-notify "Emacs" msg)) msg))
 
   ;; journal
   (with-eval-after-load 'org-journal
@@ -969,7 +985,7 @@ before packages are loaded."
   ;; timer
   (with-eval-after-load 'org-pomodoro
     (defun mytimer-notifier-notify (msg)
-      (org-pomodoro-maybe-play-sound :pomodoro)) 
+      (org-pomodoro-maybe-play-sound :pomodoro))
     (setq org-show-notification-handler
           (lambda (msg) (mytimer-notifier-notify msg)))
     (if-let (player (executable-find "paplay"))
@@ -979,3 +995,24 @@ before packages are loaded."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(gnu-elpa-keyring-update ace-link add-node-modules-path aggressive-indent aichat async-await iter2 promise auto-compile auto-highlight-symbol auto-yasnippet blacken bmx-mode browse-at-remote centered-cursor-mode clean-aindent-mode code-cells column-enforce-mode company-anaconda anaconda-mode company-c-headers company-go company-rtags company-statistics company-web web-completion-data company-ycmd company counsel-css counsel-projectile counsel cpp-auto-include cython-mode define-word devdocs diff-hl dired-quick-sort disaster tablist aio docker-tramp dockerfile-mode drag-stuff dumb-jump editorconfig elisp-def elisp-slime-nav emmet-mode emr clang-format esh-help eshell-prompt-extras eshell-z eval-sexp-fu evil-anzu anzu evil-args evil-cleverparens paredit evil-collection annalist evil-easymotion evil-escape evil-exchange evil-goggles evil-iedit-state iedit evil-indent-plus evil-lion evil-lisp-state evil-matchit evil-mc evil-nerd-commenter evil-numbers evil-org evil-pinyin names evil-surround evil-textobj-line evil-tutor evil-unimpaired evil-visual-mark-mode evil-visualstar expand-region eyebrowse fancy-battery flx-ido flx flycheck-elsa flycheck-golangci-lint flycheck-package package-lint flycheck-pos-tip pos-tip flycheck-rtags flycheck-ycmd gendoxy gh-md git-link git-messenger git-modes gitignore-templates gnuplot go-eldoc go-fill-struct go-gen-test go-guru go-impl go-rename go-tag go-mode godoctor golden-ratio google-c-style google-translate helm-make hide-comnt highlight-indentation highlight-numbers parent-mode highlight-parentheses hl-todo hungry-delete impatient-mode importmagic epc ctable concurrent indent-guide info+ inspector ivy-avy ivy-hydra ivy-purpose ivy-rtags ivy-xref ivy-yasnippet js-doc js2-refactor multiple-cursors json-mode json-navigator hierarchy json-reformat json-snatcher launchctl link-hint live-py-mode livid-mode lorem-ipsum origami lsp-mode macrostep markdown-toc multi-line shut-up multi-term multi-vterm mwim nameless nginx-mode nodejs-repl nose npm-mode omnisharp csharp-mode auto-complete open-junk-file org-cliplink org-download org-journal org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-re-reveal htmlize org-rich-yank magit-section emacsql ox-hugo paradox rustic transient zenburn-theme ycmd yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum window-purpose which-key wgrep websocket web-mode web-beautify vterm volatile-highlights vmd-mode vim-powerline vi-tilde-fringe verb uuidgen use-package unicode-fonts unfill typescript-mode treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil treemacs-all-the-icons toml-mode toc-org tide terminal-here term-cursor tagedit symon symbol-overlay swiper string-inflection string-edit-at-point sqlite3 sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc solarized-theme smex smeargle smartparens slim-mode skewer-mode sis shell-pop scss-mode sass-mode rust-mode rtags ron-mode rjsx-mode rime reveal-in-osx-finder restart-emacs rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js powershell popwin pippel pipenv pip-requirements pcre2el password-generator ox-gfm overseer osx-trash osx-clipboard org-superstar markdown-mode hybrid-mode holy-mode evil-evilified-state dotenv-mode diminish bind-map async))
+   '(warning-suppress-types '((comp))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(company-tooltip-selection ((t (:foreground "#DCDCCC" :background "#6F6F6F"))))
+   '(vertical-border ((t (:foreground "grey33")))))
+  )

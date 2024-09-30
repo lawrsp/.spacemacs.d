@@ -21,6 +21,11 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
+(defun spacemacs/aichat-bingai-reset-session ()
+    (interactive)
+    (aichat-bingai-conversation-reset))
+
 (defun spacemacs//aichat-setup-global-bindings ()
   "Define keys bindings globally of aichat functions"
   (spacemacs/declare-prefix "ai"  "aichat")
@@ -32,18 +37,20 @@
     "aia" 'aichat-bingai-assistant
     ;; aichat-bingai-replace-or-insert
     "aii" 'aichat-bingai-replace-or-insert
-    "aioa" 'aichat-openai-assistant))
+    "aioa" 'aichat-openai-assistant
+    "air" 'spacemacs/aichat-bingai-reset-session))
 
 (defun spacemacs//aichat-setup-tools ()
   (aichat-bingai-prompt-create "translator"
-                               :input-prompt "请翻译: "
-                               :text-format "请识别我说的语言，如果我说的语言是中文，请把它翻译成英文；如果我说的语言不是中文，请把它翻译成中文。你的返回内容必须只有翻译后的文本，不能包括任何其它内容:\n%s"
+                               :input-prompt "=请翻译=: "
+                               :text-format "请翻译成中文，回答里只包含翻译完成后的内容，要翻译的内容如下:\n%s"
                                :chat t
                                :assistant t
-                               :replace-or-insert t)
-
+                               :replace-or-insert t) 
   (spacemacs/declare-prefix "ait"  "translator")
-  (spacemacs/set-leader-keys 
+  (spacemacs/set-leader-keys
     "aitc" 'aichat-bingai-chat-translator
     "aita" 'aichat-bingai-assistant-translator
     "aiti" 'aichat-bingai-replace-or-insert-translator))
+
+;; :text-format "Please identify the language I am speaking. If it is Chinese, please translate it into English; if it is not Chinese, please translate it into Chinese. Your answer must only contain the translated content. The following is the sentence I want to translate:\r\n%s"

@@ -217,7 +217,10 @@ This function should only modify configuration layer settings."
          ;; go-install-after-save 'sync
          go-use-golangci-lint t
          )
-     (rust :variables rust-backend 'lsp)
+     (rust :variables
+           rust-backend 'lsp
+           rustic-format-on-save t
+           rustic-format-on-save-method 'lsp-format-buffer)
      docker
      (python :variables
              python-backend 'lsp
@@ -494,7 +497,7 @@ It should only modify the values of Spacemacs settings."
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
-   dotspacemacs-large-file-size 1
+   dotspacemacs-large-file-size 4
 
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another

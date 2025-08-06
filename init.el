@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      better-defaults
+     (smart-path)
      osx
      (spacemacs-purpose)
      (unicode-fonts :variables unicode-fonts-force-multi-color-on-mac t)
@@ -157,7 +158,9 @@ This function should only modify configuration layer settings."
      windows-scripts
      nginx
      sql
-     prettier
+     (prettier)
+     ;; :variables
+     ;;           prettier-js-use-modules-bin t)
      (html :variables
            web-fmt-tool 'prettier)
      yaml
@@ -184,8 +187,7 @@ This function should only modify configuration layer settings."
            json-backend 'company-json
            json-fmt-on-save t)
      ;;import-js
-     (node :variables
-           node-add-modules-path t)
+     (node)
      (javascript :variables
                  js2-mode-show-strict-warnings nil
                  js2-strict-missing-semi-warning nil
@@ -197,9 +199,8 @@ This function should only modify configuration layer settings."
      (typescript :variables
                  typescript-fmt-tool 'prettier
                  typescript-backend 'tide
-                 ;; typescript-backend 'lsp
-                 ;; tide-tsserver-executable "~/.npm-packages/bin/tsserver"
                  typescript-linter 'eslint
+                 ;; typescript-backend 'lsp
                  ;; typescript-lsp-linter nil
                  typescript-fmt-on-save t)
      react
@@ -903,6 +904,33 @@ before packages are loaded."
     (add-to-list 'org-src-lang-modes (cons "jsx" 'rjsx))
     )
 
+  (defun my/setup-typescript-vars ()
+    ;; (setq-local tide-tsserver-executable (smart-path/find-node-modules-bin "tsserver" "tsserver.cmd"))
+    (setq-local flycheck-javascript-eslint-executable (smart-path/find-node-modules-bin "eslint" "eslint.cmd"))
+    (setq-local prettier-js-command (smart-path/find-node-modules-bin "prettier" "prettier.cmd")))
+
+  (add-hook 'typescript-mode-hook #'my/setup-typescript-vars)
+  (add-hook 'typescript-tsx-mode-hook #'my/setup-typescript-vars)
+  (add-hook 'js2-mode-hook #'my/setup-typescript-vars)
+
+
+  (defun my/setup-magit-vars ()
+    (setq-local magit-git-executable (smart-path/find-bin "git")))
+  (add-hook 'magit-status-mode-hook #'my/setup-magit-vars)
+
+
+  ;; (defun --setup-ts-js-vars ()
+  ;;   "在进入 TypeScript 模式时设置变量"
+  ;;   (message "setup-ts-js-vars")
+  ;;   (setq-local tide-tsserver-executable (smart-path/find-node-modules-bin "tsserver" "tsserver.cmd"))
+  ;;   (setq-local flycheck-javascript-eslint-executable (smart-path/find-node-modules-bin "eslint" "eslint.cmd")))
+
+  ;; (with-eval-after-load 'typescript
+  ;;   (add-hook 'typescript-tsx-mode-hook #'--setup-ts-js-vars))
+
+  ;; (with-eval-after-load 'javascript
+  ;;   (add-hook 'js2-mode-hook #'--setup-ts-js-vars))
+
   ;; (with-eval-after-load 'markdown-mode
   ;;   (add-hook 'markdown-mode-hook 'set-buffer-variable-pitch) )
   ;; (with-eval-after-load 'info-mode
@@ -1008,14 +1036,11 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     '(gnu-elpa-keyring-update ace-link add-node-modules-path aggressive-indent aichat async-await iter2 promise auto-compile auto-highlight-symbol auto-yasnippet blacken bmx-mode browse-at-remote centered-cursor-mode clean-aindent-mode code-cells column-enforce-mode company-anaconda anaconda-mode company-c-headers company-go company-rtags company-statistics company-web web-completion-data company-ycmd company counsel-css counsel-projectile counsel cpp-auto-include cython-mode define-word devdocs diff-hl dired-quick-sort disaster tablist aio docker-tramp dockerfile-mode drag-stuff dumb-jump editorconfig elisp-def elisp-slime-nav emmet-mode emr clang-format esh-help eshell-prompt-extras eshell-z eval-sexp-fu evil-anzu anzu evil-args evil-cleverparens paredit evil-collection annalist evil-easymotion evil-escape evil-exchange evil-goggles evil-iedit-state iedit evil-indent-plus evil-lion evil-lisp-state evil-matchit evil-mc evil-nerd-commenter evil-numbers evil-org evil-pinyin names evil-surround evil-textobj-line evil-tutor evil-unimpaired evil-visual-mark-mode evil-visualstar expand-region eyebrowse fancy-battery flx-ido flx flycheck-elsa flycheck-golangci-lint flycheck-package package-lint flycheck-pos-tip pos-tip flycheck-rtags flycheck-ycmd gendoxy gh-md git-link git-messenger git-modes gitignore-templates gnuplot go-eldoc go-fill-struct go-gen-test go-guru go-impl go-rename go-tag go-mode godoctor golden-ratio google-c-style google-translate helm-make hide-comnt highlight-indentation highlight-numbers parent-mode highlight-parentheses hl-todo hungry-delete impatient-mode importmagic epc ctable concurrent indent-guide info+ inspector ivy-avy ivy-hydra ivy-purpose ivy-rtags ivy-xref ivy-yasnippet js-doc js2-refactor multiple-cursors json-mode json-navigator hierarchy json-reformat json-snatcher launchctl link-hint live-py-mode livid-mode lorem-ipsum origami lsp-mode macrostep markdown-toc multi-line shut-up multi-term multi-vterm mwim nameless nginx-mode nodejs-repl nose npm-mode omnisharp csharp-mode auto-complete open-junk-file org-cliplink org-download org-journal org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-re-reveal htmlize org-rich-yank magit-section emacsql ox-hugo paradox rustic transient zenburn-theme ycmd yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum window-purpose which-key wgrep websocket web-mode web-beautify vterm volatile-highlights vmd-mode vim-powerline vi-tilde-fringe verb uuidgen use-package unicode-fonts unfill typescript-mode treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil treemacs-all-the-icons toml-mode toc-org tide terminal-here term-cursor tagedit symon symbol-overlay swiper string-inflection string-edit-at-point sqlite3 sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc solarized-theme smex smeargle smartparens slim-mode skewer-mode sis shell-pop scss-mode sass-mode rust-mode rtags ron-mode rjsx-mode rime reveal-in-osx-finder restart-emacs rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js powershell popwin pippel pipenv pip-requirements pcre2el password-generator ox-gfm overseer osx-trash osx-clipboard org-superstar markdown-mode hybrid-mode holy-mode evil-evilified-state dotenv-mode diminish bind-map async))
-   '(warning-suppress-types '((comp))))
+   )
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(company-tooltip-selection ((t (:foreground "#DCDCCC" :background "#6F6F6F"))))
-   '(vertical-border ((t (:foreground "grey33")))))
+   )
   )
